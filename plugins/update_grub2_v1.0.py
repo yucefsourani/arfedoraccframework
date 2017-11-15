@@ -19,7 +19,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #  
-#  
+# 
+import os
 import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,GdkPixbuf, Pango
@@ -37,7 +38,7 @@ distro_version       = ["all"]
 mainbuttontooltip    = _("Update Grub2 Boot Loader Menu")
 blockclose           = False
 if_true_skip         = False
-if_false_skip        = True
+if_false_skip        = os.path.isfile("/etc/fedora-release")
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 1
