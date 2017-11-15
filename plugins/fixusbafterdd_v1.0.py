@@ -148,7 +148,6 @@ class Plugin(BasePlugin):
             return 
         self._parent_.set_sensitive(False)
         t = threading.Thread(target=self.fix_,args=(filetorun,drive))
-        print(self.drives_dict[drive])
         self.drives_dict[drive].umount_drive(self.forcecheckbutton.get_active())
         t.start()
         
