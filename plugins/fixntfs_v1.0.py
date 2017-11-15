@@ -27,19 +27,19 @@ gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,Gio,GdkPixbuf,GLib, Pango
 from arfedoraccframework.baseplugin import BasePlugin
 from arfedoraccframework.baseutils import get_icon_location, write_file_to_run
-from arfedoraccframework.udsks import INIT
+from  arfedoraccframework.basepartitions import  get_parttions_by_type
 from arfedoraccframework.widgetsutils import Yes_Or_No, NInfo
 import time
 import threading
 
-button_label         = _("Fix Flash")
-button_image         = "vector_66_01-512.png"
+button_label         = _("Fix NTFS Parttions")
+button_image         = "ntfs_d.jpg"
 category             = _("Utilities")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Fix Flash Memory After dd command")
+mainbuttontooltip    = _("Fix NTFS Parttion")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True
@@ -56,18 +56,17 @@ class Plugin(BasePlugin):
         mainvbox = Gtk.VBox(spacing=20)
         mainvbox.set_margin_left(60)
         mainvbox.set_margin_right(60)
-        
         vbox1 = Gtk.VBox(spacing=20)
         vbox2 = Gtk.VBox(spacing=20)
         
         self._mainbox_.set_border_width(10)
         self._mainbox_.set_spacing(30)
-
-        headericon   = get_icon_location("flash-chip.png")
+        
+        headericon   = get_icon_location("ntfs_d.jpg")
         headerbox    = Gtk.VBox(spacing=6)
         headerpixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(headericon,100,100)
         headerimage  = Gtk.Image.new_from_pixbuf(headerpixbuf)
-        headerlabel  = Gtk.Label(_("<b>Fix USB Flash Memory Adter dd Command</b>"),use_markup=True)
+        headerlabel  = Gtk.Label(_("<b>Fix NTFS Parttion</b>"),use_markup=True)
         headerlabel.set_line_wrap(True)
         headerlabel.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
         headerlabel.set_max_width_chars(13)
@@ -75,14 +74,15 @@ class Plugin(BasePlugin):
         headerbox.pack_start(headerimage,False,False,0)
         headerbox.pack_start(headerlabel,False,False,0)
         headervseparator = Gtk.Separator()
-        
 
-        self.fixbutton = Gtk.Button(_("Run Fix"))
-        self.fixbutton.connect("clicked",self.on_fixhbutton_clicked)
 
         self._mainbox_.pack_start(headerbox,False,False,0)
         self._mainbox_.pack_start(headervseparator,False,False,0)
         self._mainbox_.pack_start(mainvbox,False,False,0)
+        
+        self.fixbutton = Gtk.Button(_("Run Fix"))
+        self.fixbutton.connect("clicked",self.on_fixhbutton_clicked)
+
         
         self.spinner = Gtk.Spinner()
         
@@ -122,7 +122,7 @@ class Plugin(BasePlugin):
 
     def on_refreshbutton_clicked(self,button=None):
         self.combo.remove_all()
-        for k,v in self.get_removable_drive().items():
+        for k,v in self.get_ntfs_p().items():
             self.combo.append(k,v)
         self.combo.set_active(0)
         iter_ = self.combo.get_active_iter()
@@ -132,24 +132,17 @@ class Plugin(BasePlugin):
             self.fixbutton.set_sensitive(True)
 
     def on_fixhbutton_clicked(self,button):
-        nn = "100%"
         iter_ = self.combo.get_active_iter()
         if iter_ == None:
             return
         drive=self.combo.get_model()[iter_][1]
-        commands = ["eject -t "+drive,"sleep 2","parted  -s {} mktable msdos".format(drive),"sleep 2",\
-        "eject -t "+drive,"sleep 2","parted  -s {} mkpart primary fat32 1M {}".format(drive,nn),"sleep 2",\
-        "eject -t "+drive,"sleep 2","mkfs.vfat -F 32 {}1 -n FLASH".format(drive)]
+        commands = ["ntfsfix "+drive]
         filetorun = write_file_to_run(commands)
         if not filetorun:
             return
-        yrn = Yes_Or_No(_("WARNING !! ALL DATA ON {} WILL BE LOST\n\nAre You Sure You Want To Continue ?").format(drive),self._parent_)
-        if not yrn.check():
-            return 
         self._parent_.set_sensitive(False)
         t = threading.Thread(target=self.fix_,args=(filetorun,drive))
-        print(self.drives_dict[drive])
-        self.drives_dict[drive].umount_drive(self.forcecheckbutton.get_active())
+        self.drives_dict[drive].umount_(self.forcecheckbutton.get_active())
         t.start()
         
        
@@ -159,7 +152,7 @@ class Plugin(BasePlugin):
         GLib.idle_add(self._parent_.set_sensitive,True)
         if out.strip():
             GLib.idle_add(self.spinner.stop)
-            return GLib.idle_add(self.info_,_("Fix Flash Memory {} Sucess.").format(drive))
+            return GLib.idle_add(self.info_,_("Fix Partition {} Sucess.").format(drive))
         else :
             GLib.idle_add(self.spinner.stop)
             err = err.decode("utf-8").strip()
@@ -176,19 +169,14 @@ class Plugin(BasePlugin):
         info__.start()
         return False
         
-    def get_removable_drive(self):
-        drives = INIT()
+    def get_ntfs_p(self):
+        drives = get_parttions_by_type(["ntfs"])
         choice = {}
-        for d in drives:
-            if d.REMOVABLE:
-                if d.SIZE !=0:
-                    choice.setdefault(d.DRIVE,d.DRIVE +" " + d.NAME[:31]+"..." +" "+ d.CONNECTIONB +" " + str(int(d.SIZE/1024/1024/1024))+"GB")
-                    self.drives_dict.setdefault(d.DRIVE,d)
+        for k,v in drives.items():
+            choice.setdefault(k,k +"   "+"Type "+v[2]+"   "+"Size "+str(int(v[1]/1024/1024))+"MB")
+            self.drives_dict.setdefault(k,v[0])
         return choice
          
-        #GLib.idle_add(self._parent_.set_sensitive,False)
-        #time.sleep(10)
-        #GLib.idle_add(self._parent_.set_sensitive,True)
         
      
 
