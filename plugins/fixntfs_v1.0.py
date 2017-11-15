@@ -32,14 +32,14 @@ from arfedoraccframework.widgetsutils import Yes_Or_No, NInfo
 import time
 import threading
 
-button_label         = _("Fix NTFS Parttions")
+button_label         = _("Fix NTFS Partitions")
 button_image         = "ntfs_d.jpg"
 category             = _("Utilities")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Fix NTFS Parttion")
+mainbuttontooltip    = _("Fix NTFS Partition")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True
@@ -66,7 +66,7 @@ class Plugin(BasePlugin):
         headerbox    = Gtk.VBox(spacing=6)
         headerpixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(headericon,100,100)
         headerimage  = Gtk.Image.new_from_pixbuf(headerpixbuf)
-        headerlabel  = Gtk.Label(_("<b>Fix NTFS Parttion</b>"),use_markup=True)
+        headerlabel  = Gtk.Label(_("<b>Fix NTFS Partition</b>"),use_markup=True)
         headerlabel.set_line_wrap(True)
         headerlabel.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
         headerlabel.set_max_width_chars(13)
