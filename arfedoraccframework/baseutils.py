@@ -27,6 +27,11 @@ import subprocess
 arch = os.uname().machine
 distro_desktop = os.getenv("XDG_CURRENT_DESKTOP",False)
 
+def fedora_get_grub_menufile():
+    if os.path.isdir("/sys/firmware/efi/efivars"):
+        return  os.readlink("/etc/grub2-efi.cfg")[2:]
+    else:
+        return os.readlink("/etc/grub2.cfg")[2:]
 
 def get_icon_location(iconname):
     iconlocation = [l for l in [os.path.join(homedata+"/icons",iconname),os.path.join("/usr/share/{}/icons".format(appname),iconname)] if os.path.isfile(l)]

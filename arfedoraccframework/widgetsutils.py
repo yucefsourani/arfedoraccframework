@@ -21,7 +21,10 @@
 # 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
+import time
+import subprocess
+import threading
 
 class Yes_Or_No(Gtk.MessageDialog):
     def __init__(self,msg,parent):
@@ -55,3 +58,84 @@ class NInfo(Gtk.MessageDialog):
         self.destroy()
         return False
 
+
+class RunAndWriteToTextView(threading.Thread):
+    def __init__(self,parent,sensitive,commands,textview,end,spinner,timeout=0,commandtimeout=0):
+        threading.Thread.__init__(self)
+        self.parent          = parent
+        self.sensitive       = sensitive
+        self.commands        = commands
+        self.timeout         = timeout
+        self.commandtimeout  = commandtimeout
+        self.end             = end
+        self.textview        = textview
+        self.spinner         = spinner
+        self.textviewbuffer  = self.textview.get_buffer()
+        
+    def run(self):
+        if self.sensitive:
+            GLib.idle_add(self.parent.set_sensitive,False)
+        if self.spinner!=None:
+            GLib.idle_add(self.spinner.start)
+        for command in self.commands:
+            if command[1]=="free":
+                out = subprocess.Popen(command[0],shell=command[2],stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+                while out.poll()==None:
+                    line = out.stdout.readline().decode("utf-8").strip()
+                    if line:
+                        GLib.idle_add(self.textviewbuffer.insert_at_cursor,line+"\n",len(line)+1)
+                    time.sleep(self.timeout)
+                if  out.poll()!=0:
+                    GLib.idle_add(self.textviewbuffer.insert_at_cursor,self.end,len(self.end))
+                    if self.sensitive:
+                        GLib.idle_add(self.parent.set_sensitive,True)
+                    if self.spinner!=None:
+                        GLib.idle_add(self.spinner.stop)
+                    return
+            else:
+                out = subprocess.Popen(command[0],shell=command[2],stdout=subprocess.PIPE,stderr=subprocess.STDOUT).communicate()[0]
+                out = out.decode("utf-8")
+                GLib.idle_add(self.textviewbuffer.insert_at_cursor,out,len(out))
+                
+
+            time.sleep(self.commandtimeout)
+            GLib.idle_add(self.textviewbuffer.insert_at_cursor,self.end,len(self.end))
+            
+        if self.sensitive:
+            GLib.idle_add(self.parent.set_sensitive,True)
+        if self.spinner!=None:
+            GLib.idle_add(self.spinner.stop)
+
+
+class RunTextView(Gtk.ScrolledWindow):
+    def __init__(self,parent,sensitive,commands=None,timeout=0,commandtimeout=0,end="\n\n",\
+                 editable=False,cursor_visible=False,justification=Gtk.Justification.LEFT,wrap_mode=Gtk.WrapMode.CHAR,\
+                 spinner=None):
+        Gtk.ScrolledWindow.__init__(self)
+        self.parent          = parent
+        self.sensitive       = sensitive
+        self.commands        = commands
+        self.timeout         = timeout
+        self.commandtimeout  = commandtimeout
+        self.end             = end
+        self.editable        = editable
+        self.cursor_visible  = cursor_visible
+        self.justification   = justification
+        self.wrap_mode       = wrap_mode
+        self.spinner         = spinner
+        
+        self.t = Gtk.TextView(editable=self.editable,cursor_visible=self.cursor_visible,justification=self.justification,\
+        wrap_mode=self.wrap_mode)
+        
+        self.add_with_viewport(self.t)
+        self.t.connect("size-allocate", self._autoscroll)
+
+
+    def start(self):
+        t = RunAndWriteToTextView(self.parent,self.sensitive,self.commands,self.t,self.end,self.spinner,self.timeout)
+        t.start()
+        
+    def _autoscroll(self,widget,rec):
+        adj = self.get_vadjustment()
+        adj.set_value(adj.get_upper() - adj.get_page_size())
+        
