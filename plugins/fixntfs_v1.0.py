@@ -85,6 +85,7 @@ class Plugin(BasePlugin):
 
         
         self.spinner = Gtk.Spinner()
+        self.spinner.hide()
         
         hboxforcecheckbutton = Gtk.HBox(spacing=3)
         labelforcecheckbutton = Gtk.Label(_("Force\nUmount"))
@@ -148,13 +149,16 @@ class Plugin(BasePlugin):
        
     def fix_(self,filetorun,drive):
         GLib.idle_add(self.spinner.start)
+        GLib.idle_add(self.spinner.show)
         out,err = subprocess.Popen("pkexec bash -e "+filetorun,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE).communicate()
         GLib.idle_add(self._parent_.set_sensitive,True)
         if out.strip():
             GLib.idle_add(self.spinner.stop)
+            GLib.idle_add(self.spinner.hide)
             return GLib.idle_add(self.info_,_("Fix Partition {} Sucess.").format(drive))
         else :
             GLib.idle_add(self.spinner.stop)
+            GLib.idle_add(self.spinner.hide)
             err = err.decode("utf-8").strip()
             if err=="Error executing command as another user: Request dismissed":
                 return

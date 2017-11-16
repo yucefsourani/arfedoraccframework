@@ -77,6 +77,7 @@ class RunAndWriteToTextView(threading.Thread):
             GLib.idle_add(self.parent.set_sensitive,False)
         if self.spinner!=None:
             GLib.idle_add(self.spinner.start)
+            GLib.idle_add(self.spinner.show)
         for command in self.commands:
             if command[1]=="free":
                 out = subprocess.Popen(command[0],shell=command[2],stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
@@ -90,6 +91,7 @@ class RunAndWriteToTextView(threading.Thread):
                     if self.sensitive:
                         GLib.idle_add(self.parent.set_sensitive,True)
                     if self.spinner!=None:
+                        GLib.idle_add(self.spinner.hide)
                         GLib.idle_add(self.spinner.stop)
                     return
             else:
@@ -104,6 +106,7 @@ class RunAndWriteToTextView(threading.Thread):
         if self.sensitive:
             GLib.idle_add(self.parent.set_sensitive,True)
         if self.spinner!=None:
+            GLib.idle_add(self.spinner.hide)
             GLib.idle_add(self.spinner.stop)
 
 
