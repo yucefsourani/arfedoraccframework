@@ -179,10 +179,22 @@ class Plugin(BasePlugin):
         self.label2.set_line_wrap(True)
         self.label3.set_line_wrap(True)
         self.label0.set_line_wrap(True)
-        self.label1.set_selectable(True)
-        self.label2.set_selectable(True)
-        self.label3.set_selectable(True)
-        self.label0.set_selectable(True)
+
+
+        self.label1_ = Gtk.Label()
+        self.label2_ = Gtk.Label()
+        self.label3_ = Gtk.Label()
+        self.label0_ = Gtk.Label()
+        
+        self.label1_.set_line_wrap(True)
+        self.label2_.set_line_wrap(True)
+        self.label3_.set_line_wrap(True)
+        self.label0_.set_line_wrap(True)
+        self.label1_.set_selectable(True)
+        self.label2_.set_selectable(True)
+        self.label3_.set_selectable(True)
+        self.label0_.set_selectable(True)
+        
         
         button_vbox = Gtk.VBox(spacing=5)
         run_button = Gtk.Button(_("Get"))
@@ -194,9 +206,13 @@ class Plugin(BasePlugin):
         hbox1.pack_start(argv_check_vbox,False,False,0)
         
         hbox2.pack_start(self.label1,False,False,0)
+        hbox2.pack_start(self.label1_,False,False,0)
         hbox3.pack_start(self.label2,False,False,0)
+        hbox3.pack_start(self.label2_,False,False,0)
         hbox4.pack_start(self.label3,False,False,0)
+        hbox4.pack_start(self.label3_,False,False,0)
         hbox0.pack_start(self.label0,False,False,0)
+        hbox0.pack_start(self.label0_,False,False,0)
         hbox5.pack_start(run_button,True,True,0)
 
 
@@ -224,30 +240,30 @@ class Plugin(BasePlugin):
         if  name:
             result = read_all_desktop_entry_files(name)
             if len(result) != 0:
-                self.label1.set_label(_("Name : {}").format(result[0][0]))
+                self.label1_.set_label(result[0][0])
                 if len(result[0][1])>1:
                     if self.argv_check.get_active() and len(result[0][1])>1:
-                        self.label2.set_label(_("Command : {}").format(result[0][1][0]+" && "+" && ".join(l for i in result[0][1][1:] for l in i)))
+                        self.label2_.set_label(result[0][1][0]+" && "+" && ".join(l for i in result[0][1][1:] for l in i))
                     else:
-                        self.label2.set_label(_("Command : {}").format(result[0][1][0]+" && "+" && ".join(l.split()[0] for i in result[0][1][1:] for l in i)))
+                        self.label2_.set_label(result[0][1][0]+" && "+" && ".join(l.split()[0] for i in result[0][1][1:] for l in i))
                 else:
                     if self.argv_check.get_active():
-                        self.label2.set_label(_("Command : {}").format(result[0][1][0]))
+                        self.label2_.set_label(result[0][1][0])
                     else:
-                        self.label2.set_label(_("Command : {}").format(result[0][1][0].split()[0]))
-                self.label3.set_label(_("Path : {}").format(result[0][2]))
-                self.label0.set_label(_("File : {}").format(result[0][3]))
+                        self.label2_.set_label(result[0][1][0].split()[0])
+                self.label3_.set_label(result[0][2])
+                self.label0_.set_label(result[0][3])
 
                     
             else:
-                self.label1.set_label(_("Name : {}").format(name))
-                self.label2.set_label(_("Command : Unknown"))
-                self.label3.set_label(_("Path : Unknown"))
-                self.label0.set_label(_("File : Unknown"))
+                self.label1_.set_label(name)
+                self.label2_.set_label("Unknown")
+                self.label3_.set_label("Unknown")
+                self.label0_.set_label("Unknown")
         else:
-            self.label1.set_label(_("Name Unknown"))
-            self.label2.set_label(_("Command : Unknown"))
-            self.label3.set_label(_("Path : Unknown"))
-            self.label0.set_label(_("File : Unknown"))
+            self.label1_.set_label("Unknown")
+            self.label2_.set_label("Unknown")
+            self.label3_.set_label("Unknown")
+            self.label0_.set_label("Unknown")
 
         
