@@ -41,12 +41,12 @@ if_true_skip         = False
 if_false_skip        = os.path.isfile("/usr/sbin/update-grub")
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
-priority             = 1
+priority             = 0
 
 
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
-        BasePlugin.__init__(self,parent=parent,boxparent=boxparent,destroy=False)
+        BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
         self._mainbox_.set_border_width(5)
         self._mainbox_.set_spacing(20)
         h = Gtk.HBox()

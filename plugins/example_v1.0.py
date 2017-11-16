@@ -40,12 +40,12 @@ if_true_skip         = False
 if_false_skip        = True
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
-priority             = 1
+priority             = 0
 
 print("#########################################################################")
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
-        BasePlugin.__init__(self,parent=parent,boxparent=boxparent,destroy=False)
+        BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
         
         logo_location = get_icon_location("1200px-Tux.svg.png")
         image = Gtk.Image.new_from_file(logo_location)
