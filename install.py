@@ -24,7 +24,7 @@ import site
 import subprocess
 import sys
 import platform
-from arfedoraccframework.appinformation import appname, homedata
+from arfedoraccframework.appinformation import appname, homedata, icon_
 
 
 arch=platform.machine()
@@ -41,6 +41,7 @@ else:
     os.makedirs("/usr/share/"+appname,exist_ok=True)
     subprocess.call("cp -r plugins /usr/share/"+appname,shell=True)
     subprocess.call("cp -r icons /usr/share/"+appname,shell=True)
+subprocess.call("sudo cp {} {}".format(os.path.basename(icon_),icon_),shell=True)
 subprocess.call("sudo cp -r arfedoraccframework {}".format(site_packages),shell=True)
 subprocess.call("chmod 755  arfedoracontrolcenter",shell=True)
 subprocess.call("sudo cp -r arfedoracontrolcenter /usr/bin/arfedoracontrolcenter",shell=True)

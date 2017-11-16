@@ -292,8 +292,8 @@ class Application(Gtk.Application):
         about.set_copyright(copyright_)
         about.set_comments(comments_)
         about.set_website(website_)
-        #logo_=GdkPixbuf.Pixbuf.new_from_file(icon_)
-        #about.set_logo(GdkPixbuf.Pixbuf.new_from_file(logo_))
+        logo_=GdkPixbuf.Pixbuf.new_from_file(icon_)
+        about.set_logo(logo_)
         about.set_authors(authors_)
         about.set_license_type(Gtk.License.GPL_3_0)
         if translators_ != "translator-credits":
