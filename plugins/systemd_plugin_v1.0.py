@@ -61,7 +61,7 @@ class Plugin(BasePlugin):
         self.user_enabled_disabled_service = collections.OrderedDict(sorted(self.user_systemd.get_all_service_timer_enabled_disabled_unit_files_dict().items()))
 
         headericon   = get_icon_location("SYSTEMD-e1434229775958.gif")
-        headerbox    = Gtk.VBox(spacing=6)
+        self.headerbox    = Gtk.VBox(spacing=6)
         headerpixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(headericon,100,100)
         headerimage  = Gtk.Image.new_from_pixbuf(headerpixbuf)
         headerlabel  = Gtk.Label(_("<b>SystemD Service Manager</b>"),use_markup=True)
@@ -69,14 +69,14 @@ class Plugin(BasePlugin):
         headerlabel.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
         headerlabel.set_max_width_chars(13)
         headerlabel.set_justify(Gtk.Justification.CENTER)
-        headerbox.pack_start(headerimage,False,False,0)
-        headerbox.pack_start(headerlabel,False,False,0)
-        self._mainbox_.pack_start(headerbox,False,False,0)
+        self.headerbox.pack_start(headerimage,False,False,0)
+        self.headerbox.pack_start(headerlabel,False,False,0)
+        self._mainbox_.pack_start(self.headerbox,False,False,0)
         
-        mainhbox = Gtk.HBox()
+        self.mainhbox = Gtk.HBox()
         vbox     = Gtk.VBox(spacing=20)
-        mainhbox.pack_start(vbox,True,False,0)
-        self._mainbox_.pack_start(mainhbox,False,False,0)
+        self.mainhbox.pack_start(vbox,True,False,0)
+        self._mainbox_.pack_start(self.mainhbox,False,False,0)
 
         if len(self.user_enabled_disabled_service.items())!=0:
             usertitlehbox = Gtk.HBox()
@@ -198,8 +198,10 @@ class Plugin(BasePlugin):
 
     
     def refresh_(self):
-        self._mainbox_.remove(self.mainvbox)
-        self.mainvbox.destroy()
+        self._mainbox_.remove(self.headerbox)
+        self._mainbox_.remove(self.mainhbox)
+        self.headerbox.destroy()
+        self.mainhbox.destroy()
         self.gui_()
         self._parent_.show_all()
     
