@@ -51,7 +51,7 @@ priority             = 0
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
         BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
-        self._mainbox_.set_border_width(5)
+        self._mainbox_.set_spacing(25)
         self.gui_()
         
     def gui_(self):
@@ -59,8 +59,7 @@ class Plugin(BasePlugin):
         self.user_systemd = systemd.SystemDUser()
         self.system_enabled_disabled_service = collections.OrderedDict(sorted(self.system_systemd.get_all_service_timer_enabled_disabled_unit_files_dict().items()))
         self.user_enabled_disabled_service = collections.OrderedDict(sorted(self.user_systemd.get_all_service_timer_enabled_disabled_unit_files_dict().items()))
-        self.mainvbox = Gtk.VBox(spacing=5)
-        self._mainbox_.pack_start(self.mainvbox,False,False,0)
+
         headericon   = get_icon_location("SYSTEMD-e1434229775958.gif")
         headerbox    = Gtk.VBox(spacing=6)
         headerpixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(headericon,100,100)
@@ -72,132 +71,130 @@ class Plugin(BasePlugin):
         headerlabel.set_justify(Gtk.Justification.CENTER)
         headerbox.pack_start(headerimage,False,False,0)
         headerbox.pack_start(headerlabel,False,False,0)
-        self.mainvbox.pack_start(headerbox,False,False,0)
+        self._mainbox_.pack_start(headerbox,False,False,0)
         
-        mainhbox = Gtk.HBox(spacing=10)
-        mainhbox2 = Gtk.HBox(spacing=10)
-        mainhbox.set_border_width(20)
-        mainhbox2.set_border_width(20)
-        
-        
-        mainlabelvbox = Gtk.VBox(spacing=20)
-        mainlabelvbox2 = Gtk.VBox(spacing=20)
-        mainswitchvbox = Gtk.VBox(spacing=16)
-        mainswitchvbox_ = Gtk.VBox(spacing=16)
-        mainswitchvbox2 = Gtk.VBox(spacing=16)
-        mainswitchvbox2_ = Gtk.VBox(spacing=16)
-        
-        usertitlehbox = Gtk.HBox()
-        systemtitlehbox = Gtk.HBox()
-        user_edhbox = Gtk.HBox()
-        system_edhbox = Gtk.HBox()
-        user_sthbox = Gtk.HBox()
-        system_sthbox = Gtk.HBox()
-        
-        usertitle = Gtk.Label(_("<b>Services Name</b>"),use_markup=True)
-        systemtitle = Gtk.Label(_("<b>Services Name</b>"),use_markup=True)
-        user_ed = Gtk.Label(_("<b>Enable/Disable</b>"),use_markup=True)
-        system_ed = Gtk.Label(_("<b>Enable/Disable</b>"),use_markup=True)
-        user_st = Gtk.Label(_("<b>Start/Stop</b>"),use_markup=True)
-        system_st = Gtk.Label(_("<b>Start/Stop</b>"),use_markup=True)
+        mainhbox = Gtk.HBox()
+        vbox     = Gtk.VBox(spacing=20)
+        mainhbox.pack_start(vbox,True,False,0)
+        self._mainbox_.pack_start(mainhbox,False,False,0)
 
-        usertitlehbox.pack_start(usertitle,False,False,0)
-        systemtitlehbox.pack_start(systemtitle,False,False,0)
-        user_edhbox.pack_start(user_ed,False,False,0)
-        system_edhbox.pack_start(system_ed,False,False,0)
-        user_sthbox.pack_start(user_st,False,False,0)
-        system_sthbox.pack_start(system_st,False,False,0)
-        
-        
-        mainlabelvbox.pack_start(usertitlehbox,False,False,0)
-        mainlabelvbox2.pack_start(systemtitlehbox,False,False,0)
-        mainswitchvbox.pack_start(user_edhbox,False,False,0)
-        mainswitchvbox_.pack_start(user_sthbox,False,False,0)
-        mainswitchvbox2.pack_start(system_edhbox,False,False,0)
-        mainswitchvbox2_.pack_start(system_sthbox,False,False,0)
-        
         if len(self.user_enabled_disabled_service.items())!=0:
+            usertitlehbox = Gtk.HBox()
+            user_edhbox = Gtk.HBox()
+            user_sthbox = Gtk.HBox()
+        
+            usertitle = Gtk.Label(_("<b>Services Name</b>"),use_markup=True)
+            user_ed = Gtk.Label(_("<b>Enable/Disable</b>"),use_markup=True)
+            user_st = Gtk.Label(_("<b>Start/Stop</b>"),use_markup=True)
+
+            usertitlehbox.pack_start(usertitle,False,False,0)
+            user_edhbox.pack_start(user_ed,False,False,0)
+            user_sthbox.pack_start(user_st,False,False,0)
+        
             userlabel = Gtk.Label(_("<b>User Services</b>"),use_markup=True)
             uservseparator = Gtk.Separator()
             uservseparator.set_margin_top(30)
-            self.mainvbox.pack_start(uservseparator,False,False,0)
-            self.mainvbox.pack_start(userlabel,False,False,0)
+            h = Gtk.HBox()
+            h.set_homogeneous (True)
+            h.pack_start(usertitlehbox,True,True,0)
+            h.pack_start(user_edhbox,True,False,0)
+            h.pack_start(user_sthbox,True,False,0)
+            vbox.pack_start(uservseparator,False,False,0)
+            vbox.pack_start(userlabel,False,False,0)
+            vbox.pack_start(h,False,False,0)
             
-        for k,v in self.user_enabled_disabled_service.items():
-            labelhbox = Gtk.HBox()
-            label  = Gtk.Label(k)
-            label.set_selectable(True)
-            label.set_line_wrap(True)
-            label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
-            label.set_max_width_chars(40)
-            labelhbox.pack_start(label,False,True,0)
-            mainlabelvbox.pack_start(labelhbox,False,False,0)
-            if  v[0]=="disabled":
-                self.switch=Gtk.Switch()
-            else:
-                self.switch=Gtk.Switch()
-                self.switch.set_active(True)
-            if  v[1][3]!="active":
-                self.switch_=Gtk.Switch()
-            else:
-                self.switch_=Gtk.Switch()
-                self.switch_.set_active(True)
+            for k,v in self.user_enabled_disabled_service.items():
+                h = Gtk.HBox()
+                h.set_homogeneous (True)
+                labelhbox = Gtk.HBox()
+                label  = Gtk.Label(k)
+                label.set_selectable(True)
+                label.set_line_wrap(True)
+                label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
+                label.set_max_width_chars(40)
+                labelhbox.pack_start(label,False,True,0)
+                if  v[0]=="disabled":
+                    self.switch=Gtk.Switch()
+                else:
+                    self.switch=Gtk.Switch()
+                    self.switch.set_active(True)
+                if  v[1][3]!="active":
+                    self.switch_=Gtk.Switch()
+                else:
+                    self.switch_=Gtk.Switch()
+                    self.switch_.set_active(True)
                 
-            self.switchhandler=self.switch.connect("state-set",self.on_switch_changed_user_enable_disable,k)
-            self.switchhandler_=self.switch_.connect("state-set",self.on_switch_changed_user_start_stop,k)
-            switchhbox = Gtk.HBox()
-            switchhbox_ = Gtk.HBox()
-            switchhbox.pack_start(self.switch,True,False,0)
-            switchhbox_.pack_start(self.switch_,True,False,0)
-            mainswitchvbox.pack_start(switchhbox,False,False,0)
-            mainswitchvbox_.pack_start(switchhbox_,False,False,0)
+                self.switchhandler=self.switch.connect("state-set",self.on_switch_changed_user_enable_disable,k)
+                self.switchhandler_=self.switch_.connect("state-set",self.on_switch_changed_user_start_stop,k)
+                switchhbox = Gtk.HBox()
+                switchhbox_ = Gtk.HBox()
+                switchhbox.pack_start(self.switch,True,False,0)
+                switchhbox_.pack_start(self.switch_,True,False,0)
+                h.pack_start(labelhbox,True,True,0)
+                h.pack_start(switchhbox,True,True,0)
+                h.pack_start(switchhbox_,True,True,0)
+                vbox.pack_start(h,False,False,0)
         
-        if len(self.user_enabled_disabled_service.items())!=0:
-            mainhbox.pack_start(mainlabelvbox,True,False,0)
-            mainhbox.pack_start(mainswitchvbox,True,False,0)
-            mainhbox.pack_start(mainswitchvbox_,True,False,0)
-            self.mainvbox.pack_start(mainhbox,False,False,0)
+
 
         if len(self.system_enabled_disabled_service.items())!=0:
+            systemtitlehbox = Gtk.HBox()
+            system_edhbox = Gtk.HBox()
+            system_sthbox = Gtk.HBox()
+        
+            systemtitle = Gtk.Label(_("<b>Services Name</b>"),use_markup=True)
+            system_ed = Gtk.Label(_("<b>Enable/Disable</b>"),use_markup=True)
+            system_st = Gtk.Label(_("<b>Start/Stop</b>"),use_markup=True)
+        
+            systemtitlehbox.pack_start(systemtitle,False,False,0)
+            system_edhbox.pack_start(system_ed,False,False,0)
+            system_sthbox.pack_start(system_st,False,False,0)
+            
             systemlabel = Gtk.Label(_("<b>System Services</b>"),use_markup=True)
             systemvseparator = Gtk.Separator()
             systemvseparator.set_margin_top(30)
-            self.mainvbox.pack_start(systemvseparator,False,False,0)
-            self.mainvbox.pack_start(systemlabel,False,False,0)
+            h = Gtk.HBox()
+            h.set_homogeneous (True)
+            h.pack_start(systemtitlehbox,True,True,0)
+            h.pack_start(system_edhbox,True,False,0)
+            h.pack_start(system_sthbox,True,False,0)
+            vbox.pack_start(systemvseparator,False,False,0)
+            vbox.pack_start(systemlabel,False,False,0)
+            vbox.pack_start(h,False,False,0)
             
-        for k,v in self.system_enabled_disabled_service.items():
-            labelhbox2 = Gtk.HBox()
-            label2  = Gtk.Label(k)
-            label2.set_selectable(True)
-            label2.set_line_wrap(True)
-            label2.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
-            label2.set_max_width_chars(40)
-            labelhbox2.pack_start(label2,False,True,0)
-            mainlabelvbox2.pack_start(labelhbox2,False,False,0)
-            if  v[0]=="disabled":
-                self.switch2=Gtk.Switch()
-            else:
-                self.switch2=Gtk.Switch()
-                self.switch2.set_active(True)
-            if  v[1][3]!="active":
-                self.switch2_=Gtk.Switch()
-            else:
-                self.switch2_=Gtk.Switch()
-                self.switch2_.set_active(True)
-            self.switchhandler2=self.switch2.connect("state-set",self.on_switch_changed_system_enable_disable,k)
-            self.switchhandler2_=self.switch2_.connect("state-set",self.on_switch_changed_system_start_stop,k)
-            switchhbox2 = Gtk.HBox()
-            switchhbox2_ = Gtk.HBox()
-            switchhbox2.pack_start(self.switch2,True,False,0)
-            switchhbox2_.pack_start(self.switch2_,True,False,0)
-            mainswitchvbox2.pack_start(switchhbox2,False,False,0)
-            mainswitchvbox2_.pack_start(switchhbox2_,False,False,0)
+            for k,v in self.system_enabled_disabled_service.items():
+                h = Gtk.HBox()
+                h.set_homogeneous (True)
+                labelhbox2 = Gtk.HBox()
+                label2  = Gtk.Label(k)
+                label2.set_selectable(True)
+                label2.set_line_wrap(True)
+                label2.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
+                label2.set_max_width_chars(40)
+                labelhbox2.pack_start(label2,False,True,0)
+                if  v[0]=="disabled":
+                    self.switch2=Gtk.Switch()
+                else:
+                    self.switch2=Gtk.Switch()
+                    self.switch2.set_active(True)
+                if  v[1][3]!="active":
+                    self.switch2_=Gtk.Switch()
+                else:
+                    self.switch2_=Gtk.Switch()
+                    self.switch2_.set_active(True)
+                
+                self.switchhandler2=self.switch2.connect("state-set",self.on_switch_changed_system_enable_disable,k)
+                self.switchhandler2_=self.switch2_.connect("state-set",self.on_switch_changed_system_start_stop,k)
+                switchhbox2 = Gtk.HBox()
+                switchhbox2_ = Gtk.HBox()
+                switchhbox2.pack_start(self.switch2,True,False,0)
+                switchhbox2_.pack_start(self.switch2_,True,False,0)
+                h.pack_start(labelhbox2,True,True,0)
+                h.pack_start(switchhbox2,True,True,0)
+                h.pack_start(switchhbox2_,True,True,0)
+                vbox.pack_start(h,False,False,0)
         
-        if len(self.system_enabled_disabled_service.items())!=0:
-            mainhbox2.pack_start(mainlabelvbox2,True,False,0)
-            mainhbox2.pack_start(mainswitchvbox2,True,False,0)
-            mainhbox2.pack_start(mainswitchvbox2_,True,False,0)
-            self.mainvbox.pack_start(mainhbox2,False,False,0)
+
 
     
     def refresh_(self):
