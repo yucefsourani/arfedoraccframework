@@ -50,9 +50,8 @@ priority             = 0
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
         BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
-        self._mainbox_.set_border_width(25)
-        mainvbox = Gtk.VBox(spacing=5)
-        self._mainbox_.pack_start(mainvbox,False,False,0)
+        self._mainbox_.set_spacing(25)
+        
         self.base = dnf.Base()
         self.base.read_all_repos()
         self.repos=self.base.repos
@@ -68,35 +67,48 @@ class Plugin(BasePlugin):
         headerlabel.set_justify(Gtk.Justification.CENTER)
         headerbox.pack_start(headerimage,False,False,0)
         headerbox.pack_start(headerlabel,False,False,0)
-        mainvbox.pack_start(headerbox,False,False,0)
+        headervseparator = Gtk.Separator()
         
-        mainhbox = Gtk.HBox(spacing=30)
-        mainhbox.set_border_width(75)
-        mainvbox.pack_start(mainhbox,False,False,0)
+        self._mainbox_.pack_start(headerbox,False,False,0)
+        self._mainbox_.pack_start(headervseparator,False,False,0)
         
-        mainlabelvbox = Gtk.VBox(spacing=20)
-        mainswitchvbox = Gtk.VBox(spacing=16)
-        mainhbox.pack_start(mainlabelvbox,True,False,0)
-        mainhbox.pack_start(mainswitchvbox,True,False,0)
+
+        
+        mainhbox = Gtk.HBox()
+
+        vbox     = Gtk.VBox(spacing=20)
+        
+        mainhbox.pack_start(vbox,True,False,0)
+        self._mainbox_.pack_start(mainhbox,False,False,0)
+
+        
+        
+        
+
         
         
         for name,repo in self.repos.items():
+            h = Gtk.HBox(spacing=10)
+            h.set_homogeneous (True)
             labelhbox = Gtk.HBox()
+            switchhbox = Gtk.HBox()
             label  = Gtk.Label(name)
             label.set_line_wrap(True)
             label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
             headerlabel.set_max_width_chars(40)
             labelhbox.pack_start(label,False,True,0)
-            mainlabelvbox.pack_start(labelhbox,False,False,0)
+            
             if not repo.enabled:
                 self.switch=Gtk.Switch()
             else:
                 self.switch=Gtk.Switch()
                 self.switch.set_active(True)
             self.switchhandler=self.switch.connect("state-set",self.on_switch_changed,name)
-            switchhbox = Gtk.HBox()
             switchhbox.pack_start(self.switch,True,False,0)
-            mainswitchvbox.pack_start(switchhbox,False,False,0)
+            h.pack_start(labelhbox,True,True,0)
+            h.pack_start(switchhbox,True,True,0)
+            vbox.pack_start(h,False,False,0)
+            
 
 
         
