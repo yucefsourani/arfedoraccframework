@@ -28,7 +28,10 @@ from arfedoraccframework.appinformation import appname, homedata
 
 
 arch=platform.machine()
-tocheck = "/usr/lib64/" if arch=="x86_64" else "/usr/lib/"
+if os.path.isfile("/usr/bin/apt"):
+    tocheck =  "/usr/lib/"
+else:
+    tocheck = "/usr/lib64/" if arch=="x86_64" else "/usr/lib/"
 site_packages = [l for l in site.getsitepackages() if l.startswith(tocheck)][0]
 if os.getuid()!=0:
     os.makedirs(homedata,exist_ok=True)
