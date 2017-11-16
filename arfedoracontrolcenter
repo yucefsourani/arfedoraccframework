@@ -190,6 +190,7 @@ class AppWindow(Gtk.ApplicationWindow):
                 b.connect("clicked",run_function)
             else:
                 b.connect("clicked",self.on_button_clicked,module_name,blockclose)
+                del plugin
             bvb.pack_start(image,False,False,0)
             bvb.pack_start(bl,False,False,0)
             b.add(bvb)
@@ -209,13 +210,22 @@ class AppWindow(Gtk.ApplicationWindow):
         if blockclose:
             self.header.set_show_close_button(False)
         backbutton = Gtk.Button()
-        backbutton.connect("clicked",self.on_backbutton_clicked,plugin,blockclose)
+        backbutton.connect("clicked",self.on_backbutton_clicked2,plugin,blockclose)
         backbutton.add(Gtk.Arrow(Gtk.ArrowType.LEFT, Gtk.ShadowType.NONE))
         self.headerhbox.add(backbutton)
 
         plugin.run()
         self.show_all()
-        
+
+    def on_backbutton_clicked2(self,button,plugin,blockclose):
+        if blockclose:
+            self.header.set_show_close_button(True)
+        self.headerhbox.remove(button)
+        button.destroy()
+        plugin.stop()
+        del plugin
+        self.row.add(self.maincontainer)
+        #self.show_all()
         
     def on_button_clicked(self,button,module_name,blockclose):
         try:
@@ -229,20 +239,21 @@ class AppWindow(Gtk.ApplicationWindow):
         if blockclose:
             self.header.set_show_close_button(False)
         backbutton = Gtk.Button()
-        backbutton.connect("clicked",self.on_backbutton_clicked,plugin,blockclose)
+        backbutton.connect("clicked",self.on_backbutton_clicked,plugin,blockclose,module)
         backbutton.add(Gtk.Arrow(Gtk.ArrowType.LEFT, Gtk.ShadowType.NONE))
         self.headerhbox.add(backbutton)
 
         plugin.run()
         self.show_all()
     
-    def on_backbutton_clicked(self,button,plugin,blockclose):
+    def on_backbutton_clicked(self,button,plugin,blockclose,module):
         if blockclose:
             self.header.set_show_close_button(True)
         self.headerhbox.remove(button)
         button.destroy()
         plugin.stop()
         del plugin
+        del module
         self.row.add(self.maincontainer)
         #self.show_all()
 

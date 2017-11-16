@@ -45,7 +45,7 @@ priority             = 1
 print("#########################################################################")
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
-        BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
+        BasePlugin.__init__(self,parent=parent,boxparent=boxparent,destroy=False)
         
         logo_location = get_icon_location("1200px-Tux.svg.png")
         image = Gtk.Image.new_from_file(logo_location)

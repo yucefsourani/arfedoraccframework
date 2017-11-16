@@ -46,7 +46,7 @@ priority             = 1
 
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
-        BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
+        BasePlugin.__init__(self,parent=parent,boxparent=boxparent,destroy=False)
         self._mainbox_.set_border_width(5)
         self._mainbox_.set_spacing(20)
         h = Gtk.HBox()

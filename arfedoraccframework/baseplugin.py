@@ -25,16 +25,18 @@ from gi.repository import Gtk
 
 
 class BasePlugin(object):
-    def __init__(self,parent,boxparent):
-        self._mainbox_ = Gtk.VBox()
-        self._parent_ = parent
+    def __init__(self,parent,boxparent,destroy=True):
+        self._mainbox_   = Gtk.VBox()
+        self._parent_    = parent
         self._boxparent_ = boxparent
+        self.__destroy   = destroy
         
     def run(self):
         self._boxparent_.add(self._mainbox_)
     
     def stop(self):
         self._boxparent_.remove(self._mainbox_)
-        self._mainbox_.destroy()
+        if self.__destroy:
+            self._mainbox_.destroy()
 
 
