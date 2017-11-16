@@ -242,6 +242,7 @@ class AppWindow(Gtk.ApplicationWindow):
         self.headerhbox.remove(button)
         button.destroy()
         plugin.stop()
+        del plugin
         self.row.add(self.maincontainer)
         #self.show_all()
 

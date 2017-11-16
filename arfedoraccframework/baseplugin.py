@@ -35,5 +35,6 @@ class BasePlugin(object):
     
     def stop(self):
         self._boxparent_.remove(self._mainbox_)
+        self._mainbox_.destroy()
 
 
