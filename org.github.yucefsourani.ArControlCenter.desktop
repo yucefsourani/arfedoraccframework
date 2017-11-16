@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=ArControlCenter
+GenericName=ArControlCenter
+Comment=ArControlCenter
+Exec=/usr/bin/arfedoracontrolcenter
+Icon=org.github.yucefsourani.ArControlCenter
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=GTK;

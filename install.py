@@ -24,9 +24,27 @@ import site
 import subprocess
 import sys
 import platform
-from arfedoraccframework.appinformation import appname, homedata, icon_
+from arfedoraccframework.appinformation import appname, homedata, icon_, appwindowtitle,comments_, appid
 
 
+desktop_entry = """[Desktop Entry]
+Name={}
+GenericName={}
+Comment={}
+Exec=/usr/bin/{}
+Icon={}
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=GTK;
+""".format(appwindowtitle,appwindowtitle,comments_,appname,os.path.basename(icon_).rsplit(".",1)[0])
+
+desktop_entry_file = appid+".desktop"
+with open(desktop_entry_file,"w") as mf:
+    mf.write(desktop_entry)
+
+
+    
 arch=platform.machine()
 if os.path.isfile("/usr/bin/apt"):
     tocheck =  ["/usr/lib/"]
@@ -41,6 +59,7 @@ else:
     os.makedirs("/usr/share/"+appname,exist_ok=True)
     subprocess.call("cp -r plugins /usr/share/"+appname,shell=True)
     subprocess.call("cp -r icons /usr/share/"+appname,shell=True)
+subprocess.call("sudo cp {} /usr/share/applications".format(desktop_entry_file),shell=True)
 subprocess.call("sudo cp {} {}".format(os.path.basename(icon_),icon_),shell=True)
 subprocess.call("sudo cp -r arfedoraccframework {}".format(site_packages),shell=True)
 subprocess.call("chmod 755  arfedoracontrolcenter",shell=True)
