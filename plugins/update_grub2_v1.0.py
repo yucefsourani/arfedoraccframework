@@ -69,7 +69,6 @@ class Plugin(BasePlugin):
         headervseparator.set_margin_bottom(10)
         headervseparator.set_margin_top(30)
         self.spinner = Gtk.Spinner()
-        self.spinner.hide()
         self.t = RunTextView (self._parent_,True,[["pkexec grub2-mkconfig -o  "+fedora_get_grub_menufile(),"free",True]],\
         cursor_visible=True,end="\n",justification=Gtk.Justification.CENTER,spinner=self.spinner)
         self.t.set_size_request (200,200)
