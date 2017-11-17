@@ -142,3 +142,10 @@ class RunTextView(Gtk.ScrolledWindow):
         adj = self.get_vadjustment()
         adj.set_value(adj.get_upper() - adj.get_page_size())
         
+
+class TooltipWindow(Gtk.Window):
+    def __init__(self,image):
+        Gtk.Window.__init__(self)
+        self.image = image
+        self.add(self.image)
+        self.show_all()
