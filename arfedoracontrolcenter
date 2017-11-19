@@ -124,9 +124,8 @@ class AppWindow(Gtk.ApplicationWindow):
                 mainbuttontooltip    = plugin.mainbuttontooltip
                 button_label         = plugin.button_label
                 button_image         =  [l for l in [os.path.join(homedata+"/icons",plugin.button_image),os.path.join("/usr/share/{}/icons".format(appname),plugin.button_image)] if os.path.isfile(l)]
-                if len(button_image)!=0:
-                    pixbuf=GdkPixbuf.Pixbuf.new_from_file_at_size(button_image[0],mainbuttonsizewidth,mainbuttonsizeheight)
-                    image          = Gtk.Image.new_from_pixbuf(pixbuf)
+                pixbuf=GdkPixbuf.Pixbuf.new_from_file_at_size(button_image[0],mainbuttonsizewidth,mainbuttonsizeheight)
+                image          = Gtk.Image.new_from_pixbuf(pixbuf)
                 category             = plugin.category
                 if category not in all_category.keys():
                     category_label = Gtk.Label("<b>"+category+"</b>",use_markup=True)
