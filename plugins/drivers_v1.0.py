@@ -116,7 +116,7 @@ class Plugin(BasePlugin):
             l1 = Gtk.Label("<b>"+k+" PCI ID "+v[0]+"</b>",use_markup=True)
             l1.set_line_wrap(True)
             l1.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
-            if  not nvidia.isdual():
+            if   nvidia.isdual():
                 if self.install_or_remove(v[1]):
                     button = Gtk.Button(_("Install"))
                     button.connect("clicked",self.on_install_button_clicked,v[1])
@@ -128,7 +128,7 @@ class Plugin(BasePlugin):
             
             v1.pack_start(nvidiaimage,False,False,0)
             v2.pack_start(l1,False,False,0)
-            if not nvidia.isdual():
+            if  nvidia.isdual():
                 v3.pack_start(button,True,False,0)
             else:
                 v3.pack_start(l,True,False,0)
@@ -230,7 +230,7 @@ class Plugin(BasePlugin):
             return 
         commands = [i for i in commands.split() if i not in ["kernel","kernel-devel"]]
         commands = " ".join([p for p in commands])
-        commands = "rpm -e --nodeps "+commands+"\n"
+        commands = "dnf remove -y --best "+commands+"\n"
         filetorun = write_file_to_run([commands])
         if not filetorun:
             return
