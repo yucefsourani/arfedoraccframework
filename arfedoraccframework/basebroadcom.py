@@ -21,7 +21,7 @@
 #
 import subprocess
 def broadcom():  
-    out = subprocess.Popen("lspci |grep Network |grep -i Qualcomm",shell=True,stdout=subprocess.PIPE).communicate()[0].decode("utf-8").strip()
+    out = subprocess.Popen("lspci |grep Network |grep -i broadcom",shell=True,stdout=subprocess.PIPE).communicate()[0].decode("utf-8").strip()
     if out:
         return {out.split(":")[-1] : ["akmod-wl kernel kernel-devel"]}
     else:
