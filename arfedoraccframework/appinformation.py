@@ -44,3 +44,4 @@ homeconfig = GLib.get_user_config_dir()+"/"+appname
 homedata   = GLib.get_user_data_dir()+"/"+appname
 os.makedirs(homedata,exist_ok=True)
 os.makedirs(homeconfig,exist_ok=True)
+

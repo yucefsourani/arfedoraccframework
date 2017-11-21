@@ -38,7 +38,8 @@ def get_icon_location(iconname):
     if len(iconlocation)!=0:
         return iconlocation[0]
     return False
-     
+    
+    
 def get_file_to_run(write=False,chmod=False,add=""):
     try:
         os.makedirs(os.path.join("/tmp",appname),exist_ok=True)
