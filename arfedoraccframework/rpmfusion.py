@@ -34,10 +34,9 @@ def check_if_exists():
 
 def installrpmfusion():
     if not check_if_exists():
-        packages = " ".join([p for p in packages_name])
-        if runinroot.call("dnf install -y  --nogpgcheck --best "+packages)==0:
-            return True
-        else:
-            return False
-    return True
-        
+        return onlyinstallrpmfusion()
+    return 0
+    
+def onlyinstallrpmfusion():
+    return  runinroot.call("dnf install -y  --nogpgcheck --best http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm")
+

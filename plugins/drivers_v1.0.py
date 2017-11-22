@@ -249,8 +249,9 @@ class Plugin(BasePlugin):
     def install_remove(self,command):
         GLib.idle_add(self.spinner.start)
         GLib.idle_add(self.statuslabel.set_label,_("<b>Please Wait</b>"))
-        if not installrpmfusion():
-            GLib.idle_add(self.statuslabel.set_label,_("<b>Fail</b>"))
+        d = installrpmfusion()
+        if d!=0 :
+            GLib.idle_add(self.statuslabel.set_label,_("<b>Install Rpmfusion Repos Fail</b>"))
             self.run_refresh_drivers()
             return
         out = runinroot.call(command,timeout=1000000)
