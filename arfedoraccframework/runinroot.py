@@ -32,30 +32,30 @@ class RunRoot (object):
         self.dbus_interface = dbus.Interface (self.dbus_object, dbus_service_name+".Backend")
         
 
-    def call(self,a):
+    def call(self,a,timeout=1000000):
         try:
-            check =  self.dbus_interface.call(a)
+            check =  self.dbus_interface.call(a,timeout=timeout)
         except:
             return 1
         return check
     
-    def callf(self,a):
+    def callf(self,a,timeout=1000000):
         try:
-            check =  self.dbus_interface.call(a)
+            check =  self.dbus_interface.call(a,timeout=timeout)
         except:
             return 1
         return check
 
-    def Popen(self,a):
+    def Popen(self,a,timeout=1000000):
         try:
-            out,err = self.dbus_interface.Popen(a)
+            out,err = self.dbus_interface.Popen(a,timeout=timeout)
         except:
             return ["","error"]
         return [out,err]
 
-    def Popenf(self,a):
+    def Popenf(self,a,timeout=1000000):
         try:
-            out,err = self.dbus_interface.Popen(a)
+            out,err = self.dbus_interface.Popen(a,timeout=timeout)
         except:
             return ["","error"]
         return [out,err]

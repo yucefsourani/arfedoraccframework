@@ -1,5 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+#  rpmfusion.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -20,23 +22,22 @@
 #  
 #  
 import subprocess
+from arfedoraccframework.runinroot import runinroot
 
-def get_fonts(lang=False,_format='%{family}\n'):
-    family = repr(_format)
-    if lang :
-        out,err = subprocess.Popen("fc-list -f {} :lang={}".format(family,lang),shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE).communicate()
-    else:
-        out,err = subprocess.Popen("fc-list -f "+family,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE).communicate()
-        print("fc-list "+family)
-    if out:
-        return out.decode("utf-8")
-    else:
-        return False
+packages_name = ["rpmfusion-nonfree-release-$(rpm -E %fedora)","rpmfusion-free-release-$(rpm -E %fedora)"]
 
-def get_fonts_name(lang=False):
-    result = []
-    _fonts =  get_fonts(lang=lang)
-    _fonts = [i for i in _fonts.split("\n")]
-    return [i.split(",")[-1] for i in _fonts if i]
+def check_if_exists():
+    for p in packages_name:
+        if subprocess.call("rpm -q "+p,shell=True)!=0:
+            return False
+    return True    
 
-
+def installrpmfusion():
+    if not check_if_exists():
+        packages = " ".join([p for p in packages_name])
+        if runinroot.call("dnf install -y  --nogpgcheck --best "+packages)==0:
+            return True
+        else:
+            return False
+    return True
+        

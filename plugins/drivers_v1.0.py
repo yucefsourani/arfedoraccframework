@@ -27,10 +27,12 @@ import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,GdkPixbuf, Pango,GLib
 from arfedoraccframework.baseplugin import BasePlugin
-from arfedoraccframework.baseutils import get_icon_location, get_file_to_run,write_file_to_run
+from arfedoraccframework.baseutils import get_icon_location
 import  arfedoraccframework.nv as nvidia
 import  arfedoraccframework.basebroadcom as broadcom
 from arfedoraccframework.widgetsutils import Yes_Or_No, NInfo
+from arfedoraccframework.rpmfusion import installrpmfusion
+from arfedoraccframework.runinroot import runinroot
 import threading
     
 button_label         = _("Drivers Manager")
@@ -116,7 +118,7 @@ class Plugin(BasePlugin):
             l1 = Gtk.Label("<b>"+k+" PCI ID "+v[0]+"</b>",use_markup=True)
             l1.set_line_wrap(True)
             l1.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
-            if  not nvidia.isdual():
+            if   nvidia.isdual():
                 if self.install_or_remove(v[1]):
                     button = Gtk.Button(_("Install"))
                     button.connect("clicked",self.on_install_button_clicked,v[1])
@@ -128,7 +130,7 @@ class Plugin(BasePlugin):
             
             v1.pack_start(nvidiaimage,False,False,0)
             v2.pack_start(l1,False,False,0)
-            if  not nvidia.isdual():
+            if   nvidia.isdual():
                 v3.pack_start(button,True,False,0)
             else:
                 v3.pack_start(l,True,False,0)
@@ -230,30 +232,28 @@ class Plugin(BasePlugin):
             return 
         commands = [i for i in commands.split() if i not in ["kernel","kernel-devel"]]
         commands = " ".join([p for p in commands])
-        commands = "dnf remove -y --best "+commands+"\n"
-        filetorun = write_file_to_run([commands])
-        if not filetorun:
-            return
+        commands = "dnf remove -y --best "+commands
         self._parent_.set_sensitive(False)
-        t = threading.Thread(target=self.install_remove,args=(filetorun,))
+        t = threading.Thread(target=self.install_remove,args=(commands,))
         t.start()
         
     def on_install_button_clicked(self,button,commands):
         yrn = Yes_Or_No(_("No Warranty For This Driver\n\nAre You Sure You Want To Continue ?"),self._parent_)
         if not yrn.check():
             return 
-        commands = "dnf install -y --best --nogpgcheck "+commands+" http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm  \n"
-        filetorun = write_file_to_run([commands])
-        if not filetorun:
-            return
+        commands = "dnf install -y --best  "+commands
         self._parent_.set_sensitive(False)
-        t = threading.Thread(target=self.install_remove,args=(filetorun,))
+        t = threading.Thread(target=self.install_remove,args=(commands,))
         t.start()
 
-    def install_remove(self,filetorun):
+    def install_remove(self,command):
         GLib.idle_add(self.spinner.start)
         GLib.idle_add(self.statuslabel.set_label,_("<b>Please Wait</b>"))
-        out= subprocess.call("pkexec bash -e "+filetorun,shell=True)
+        if not installrpmfusion():
+            GLib.idle_add(self.statuslabel.set_label,_("<b>Fail</b>"))
+            self.run_refresh_drivers()
+            return
+        out = runinroot.call(command,timeout=1000000)
         if out==0:
             GLib.idle_add(self.statuslabel.set_label,_("<b>Success Restart System</b>"))
         else:
