@@ -80,3 +80,11 @@ for p in ts:
 for i in copytolocale:
     subprocess.call("sudo cp {} {}".format(i[0],i[1]),shell=True)
 
+subprocess.call("sudo mkdir -p /usr/libexec/arfedoracontrolcenter",shell=True)
+subprocess.call("sudo cp pk/arfedoracontrolcenter_dbus_service.py /usr/libexec/arfedoracontrolcenter",shell=True)
+subprocess.call("sudo chmod 755 /usr/libexec/arfedoracontrolcenter/arfedoracontrolcenter_dbus_service.py",shell=True)
+
+subprocess.call("sudo cp pk/org.github.yucefsourani.ArfedoraControlCenter.conf /etc/dbus-1/system.d",shell=True)
+subprocess.call("sudo cp pk/org.github.yucefsourani.ArfedoraControlCenter.policy /usr/share/polkit-1/actions",shell=True)
+subprocess.call("sudo cp pk/org.github.yucefsourani.ArfedoraControlCenter.service /usr/share/dbus-1/system-services",shell=True)
+subprocess.call("sudo systemctl reload dbus.service",shell=True)

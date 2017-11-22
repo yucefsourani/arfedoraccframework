@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.github.yucefsourani.ArfedoraControlCenter
+Exec=/usr/libexec/arfedoracontrolcenter/arfedoracontrolcenter_dbus_service.py
+User=root

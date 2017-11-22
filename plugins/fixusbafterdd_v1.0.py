@@ -51,7 +51,6 @@ priority             = 0
 
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
-        nvidia.INIT()
         BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
         self.drives_dict = {}
         mainvbox = Gtk.VBox(spacing=20)

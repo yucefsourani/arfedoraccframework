@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+
+<policyconfig>
+  <vendor>arfedora.blogspot.com</vendor>
+  <vendor_url>https://arfedora.blogspot.com</vendor_url>
+  <icon_name>preferences-system</icon_name>
+  <action id="org.github.yucefsourani.ArfedoraControlCenter.Call">
+    <description>Arfedora Control Center</description>
+    <message>Managing your system with Arfedora control center requires authentication</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+</policyconfig>

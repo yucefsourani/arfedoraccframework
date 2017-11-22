@@ -27,6 +27,7 @@ gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,GdkPixbuf, Pango
 from arfedoraccframework.baseplugin import BasePlugin
 from arfedoraccframework.baseutils import get_icon_location
+from arfedoraccframework.runinroot import runinroot
 import time
 
 
@@ -115,7 +116,7 @@ class Plugin(BasePlugin):
 
     def on_switch_changed(self,switch,state,reponame):
         if state:
-            check = subprocess.call("pkexec dnf config-manager --set-enable "+reponame,shell=True)
+            check = runinroot.call("dnf config-manager --set-enable "+reponame)
             if check!=0:
                 switch.handler_block_by_func(self.on_switch_changed)
                 switch.set_active(False)
@@ -123,7 +124,7 @@ class Plugin(BasePlugin):
                 return True
                     
         else :
-            check = subprocess.call("pkexec dnf config-manager --set-disable "+reponame,shell=True)
+            check = runinroot.call("dnf config-manager --set-disable "+reponame)
             if check!=0:
                 switch.handler_block_by_func(self.on_switch_changed)
                 switch.set_active(True)
