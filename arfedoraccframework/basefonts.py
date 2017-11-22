@@ -20,6 +20,9 @@
 #  
 #  
 import subprocess
+from gi.repository import GLib
+from bs4 import BeautifulSoup
+import os
 
 def get_fonts(lang=False,_format='%{family}\n'):
     family = repr(_format)
@@ -40,3 +43,43 @@ def get_fonts_name(lang=False):
     return [i.split(",")[-1] for i in _fonts if i]
 
 
+
+#files   = [GLib.get_home_dir()+"/.fonts.conf", GLib.get_user_config_dir()+"/fontconfig/fonts.conf"]
+#folders = [GLib.get_home_dir()+"/.fonts.conf.d", GLib.get_user_config_dir()+"/fontconfig/conf.d"]
+
+def set_config(fontname):
+    config = """<fontconfig>
+<!-- Default font for the ar locale (no fc-match pattern) -->
+<match>
+<test compare="contains" name="lang">
+<string>ar</string>
+</test>
+<edit mode="prepend" name="family">
+<string>__NAME__</string>
+</edit>
+</match>
+<dir>~/.fonts</dir>
+</fontconfig>
+"""
+    configfile = GLib.get_user_config_dir()+"/fontconfig/conf.d/99-arfedora-fonts-config.conf"
+    try:
+        with open(configfile,"w") as mf:
+            mf.write(config.replace("__NAME__",fontname))
+    except:
+        return False
+    return True
+    
+def get_config():
+    configfile = GLib.get_user_config_dir()+"/fontconfig/conf.d/99-arfedora-fonts-config.conf"
+    if not os.path.isfile(configfile):
+        return False
+    try:
+        with open(configfile) as mf:
+            soup     = BeautifulSoup(mf,"xml")
+            fontname = soup.find("match").find("edit").find("string").text
+    except:
+        return False
+    return fontname
+
+def remove_config():
+    subprocess.call("rm "+GLib.get_user_config_dir()+"/fontconfig/conf.d/99-arfedora-fonts-config.conf",shell=True)
