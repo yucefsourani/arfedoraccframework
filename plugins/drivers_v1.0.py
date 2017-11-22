@@ -22,6 +22,7 @@
 # add yes or no label
 
 import subprocess
+import time
 import os
 import gi
 gi.require_version("Gtk","3.0")
@@ -33,6 +34,7 @@ import  arfedoraccframework.basebroadcom as broadcom
 from arfedoraccframework.widgetsutils import Yes_Or_No, NInfo
 from arfedoraccframework.rpmfusion import installrpmfusion
 from arfedoraccframework.runinroot import runinroot
+from arfedoraccframework.basenetworkmanager import NetworkManager
 import threading
     
 button_label         = _("Drivers Manager")
@@ -148,7 +150,7 @@ class Plugin(BasePlugin):
                 l1.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
                 if self.install_or_remove(v[0]):
                     button = Gtk.Button(_("Install"))
-                    button.connect("clicked",self.on_install_button_clicked,v[0])
+                    button.connect("clicked",self.on_install_button_clicked,v[0],"i",True)
                 else:
                     button = Gtk.Button(_("Remove"))
                     button.connect("clicked",self.on_remove_button_clicked,v[0])
@@ -226,7 +228,7 @@ class Plugin(BasePlugin):
                     return True
         return False
         
-    def on_remove_button_clicked(self,button,commands):
+    def on_remove_button_clicked(self,button,commands,status="r",wireless=False):
         yrn = Yes_Or_No(_("No Warranty For This Driver\n\nAre You Sure You Want To Continue ?"),self._parent_)
         if not yrn.check():
             return 
@@ -234,19 +236,19 @@ class Plugin(BasePlugin):
         commands = " ".join([p for p in commands])
         commands = "dnf remove -y --best "+commands
         self._parent_.set_sensitive(False)
-        t = threading.Thread(target=self.install_remove,args=(commands,))
+        t = threading.Thread(target=self.install_remove,args=(commands,status,wireless))
         t.start()
         
-    def on_install_button_clicked(self,button,commands):
+    def on_install_button_clicked(self,button,commands,status="i",wireless=False):
         yrn = Yes_Or_No(_("No Warranty For This Driver\n\nAre You Sure You Want To Continue ?"),self._parent_)
         if not yrn.check():
             return 
         commands = "dnf install -y --best  "+commands
         self._parent_.set_sensitive(False)
-        t = threading.Thread(target=self.install_remove,args=(commands,))
+        t = threading.Thread(target=self.install_remove,args=(commands,status,wireless))
         t.start()
 
-    def install_remove(self,command):
+    def install_remove(self,command,status,wireless):
         GLib.idle_add(self.spinner.start)
         GLib.idle_add(self.statuslabel.set_label,_("<b>Please Wait</b>"))
         d = installrpmfusion()
@@ -256,6 +258,11 @@ class Plugin(BasePlugin):
             return
         out = runinroot.call(command,timeout=1000000)
         if out==0:
+            if wireless and status=="i":
+                networkmanager = NetworkManager()
+                for interface in networkmanager.getAllWirelessInterfaceNAME():
+                    runinroot.call("firewall-cmd --zone=$(firewall-cmd --get-default-zone) --permanent --add-interface="+interface,timeout=1000000)
+                    time.sleep(1)
             GLib.idle_add(self.statuslabel.set_label,_("<b>Success Restart System</b>"))
         else:
             GLib.idle_add(self.statuslabel.set_label,_("<b>Fail</b>"))
