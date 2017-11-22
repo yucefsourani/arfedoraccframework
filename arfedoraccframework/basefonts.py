@@ -61,6 +61,7 @@ def set_config(fontname):
 <dir>~/.fonts</dir>
 </fontconfig>
 """
+    os.makedirs(GLib.get_user_config_dir()+"/fontconfig/conf.d",exist_ok=True)
     configfile = GLib.get_user_config_dir()+"/fontconfig/conf.d/99-arfedora-fonts-config.conf"
     try:
         with open(configfile,"w") as mf:
