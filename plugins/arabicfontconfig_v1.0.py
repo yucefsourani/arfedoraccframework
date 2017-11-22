@@ -82,14 +82,17 @@ class Plugin(BasePlugin):
             self.combo.append(str(count),fontname)
             font_dict.setdefault(fontname,count)
             count+=1
+        self.label = Gtk.Label("بسم الله الرحمن الرحيم")
         fn = font.get_config()
         if fn:
             self.combo.set_active(font_dict[fn]+1)
+            pangofont = Pango.font_description_from_string(fn)
+            self.label.modify_font(pangofont)
         else:
             self.combo.set_active(0)
         self.combo.connect("changed",self.on_combo_changed)
         self.vb.pack_start(self.combo,True,True,0)
-        self._parent_.show_all()
+        self.vb.pack_start(self.label,True,True,0)
         
         
     def on_combo_changed(self,combo):
@@ -101,4 +104,8 @@ class Plugin(BasePlugin):
             font.remove_config()
         else:
             check = font.set_config(fntn)
+            fn = font.get_config()
+            if fn :
+                pangofont = Pango.font_description_from_string(fn)
+                self.label.modify_font(pangofont)
 
