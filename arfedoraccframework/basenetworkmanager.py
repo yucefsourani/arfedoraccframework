@@ -25,7 +25,7 @@ import dbus
 
 
 class NetworkManager(object):
-    def __init__(self,bus):
+    def __init__(self):
         self.__bus              = dbus.SystemBus()
         self.__name             = "org.freedesktop.NetworkManager"
         __objectpath            =  "/org/freedesktop/NetworkManager"
@@ -50,7 +50,7 @@ class NetworkManager(object):
         return result
         
     def getAllWirelessInterfaceNAME(self):
-        resutl = []
+        result = []
         for interface in self.getAllInterfaceNAME():
             if interface.startswith("wl"):
                 result.append(interface)
