@@ -49,16 +49,22 @@ if_all_true_skip     = [True,False]
 priority             = 0
 
 
-mac_extensions_to_enable = ["user-theme@gnome-shell-extensions.gcampax.github.com",
+"""mac_extensions_to_enable = ["user-theme@gnome-shell-extensions.gcampax.github.com",
                             "clipboard-indicator@tudmotu.com",
                             "CoverflowAltTab@dmo60.de",
                             "dash-to-dock@micxgx.gmail.com",
                             "drive-menu@gnome-shell-extensions.gcampax.github.com",
                             "EasyScreenCast@iacopodeenosee.gmail.com",
                             "simplenetspeed@biji.extension",
-                            "background-logo@fedorahosted.org"]
+                            "background-logo@fedorahosted.org"]"""
 
-             
+mac_extensions_to_enable = ["user-theme@gnome-shell-extensions.gcampax.github.com",
+                            "clipboard-indicator@tudmotu.com",
+                            "CoverflowAltTab@dmo60.de",
+                            "dash-to-dock@micxgx.gmail.com",
+                            "drive-menu@gnome-shell-extensions.gcampax.github.com",
+                            "simplenetspeed@biji.extension",
+                            "background-logo@fedorahosted.org"]
        
 
 mac_gsettings = [ ["org.gnome.desktop.background"          , "show-desktop-icons",GLib.Variant('b',False)] ,
