@@ -229,7 +229,7 @@ class Plugin(BasePlugin):
         return False
         
     def on_remove_button_clicked(self,button,commands,status="r",wireless=False):
-        yrn = Yes_Or_No(_("No Warranty For This Driver\n\nAre You Sure You Want To Continue ?"),self._parent_)
+        yrn = Yes_Or_No(_("Warning !! Remove this driver on your own risk\n\nAre You Sure You Want To Continue ?"),self._parent_)
         if not yrn.check():
             return 
         commands = [i for i in commands.split() if i not in ["kernel","kernel-devel"]]
@@ -240,7 +240,7 @@ class Plugin(BasePlugin):
         t.start()
         
     def on_install_button_clicked(self,button,commands,status="i",wireless=False):
-        yrn = Yes_Or_No(_("No Warranty For This Driver\n\nAre You Sure You Want To Continue ?"),self._parent_)
+        yrn = Yes_Or_No(_("Warning !! use this package on your own risk\n\nAre You Sure You Want To Continue ?"),self._parent_)
         if not yrn.check():
             return 
         commands = "dnf install -y --best  "+commands
