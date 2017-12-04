@@ -20,10 +20,70 @@
 #  
 #  
 import subprocess
-from gi.repository import GLib
 from bs4 import BeautifulSoup
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk,GLib
 import os
+from shutil import copy2
+import threading
 
+class  CopyFonts(threading.Thread):
+    def __init__(self,location,parent,spinner,refresh_fuction=None):
+        threading.Thread.__init__(self)
+        self.location        = location
+        self.parent          = parent
+        self.spinner         = spinner
+        self.refresh_fuction = refresh_fuction
+        
+    def run(self):
+        GLib.idle_add(self.parent.set_sensitive,False)
+        GLib.idle_add(self.spinner.start)
+        done = False
+        fonts_folder = GLib.get_user_data_dir()+"/fonts"
+        os.makedirs(fonts_folder,exist_ok=True)
+        for dirname,folders,files in os.walk(self.location):
+            for file_ in files:
+                if file_.lower().endswith("ttf") or file_.lower().endswith("otf") or file_.lower().endswith("fon"):
+                    file_ = os.path.join(dirname,file_)
+                    try:
+                        copy2(file_,fonts_folder)
+                        done = True
+                    except Exception as e:
+                        print(e)
+                        GLib.idle_add(self.parent.set_sensitive,True)
+                        return False
+        if done:
+            subprocess.call("chmod 755 -R {}/*".format(fonts_folder),shell=True)
+            subprocess.call("fc-cache -fv",shell=True)
+        GLib.idle_add(self.spinner.stop)
+        GLib.idle_add(self.parent.set_sensitive,True)
+        if done:
+            if self.refresh_fuction:
+                GLib.idle_add(self.refresh_fuction)
+        return True
+
+                
+            
+
+class FolderFontsChooser(Gtk.FileChooserDialog):
+    def __init__(self,parent):
+        Gtk.FileChooserDialog.__init__(self,parent=parent,action=Gtk.FileChooserAction.SELECT_FOLDER)
+        self.set_title("FileChooserDialog")
+        self.add_button("_Open", Gtk.ResponseType.OK)
+        self.add_button("_Cancel", Gtk.ResponseType.CANCEL)
+        self.set_default_response(Gtk.ResponseType.OK)
+
+        
+
+    def start(self):
+        response = self.run()
+        if response == Gtk.ResponseType.OK:
+            return self.get_filename()
+        else:
+            return False
+        
+        
 def get_fonts(lang=False,_format='%{family}\n'):
     family = repr(_format)
     if lang :

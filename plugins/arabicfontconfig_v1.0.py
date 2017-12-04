@@ -61,18 +61,27 @@ class Plugin(BasePlugin):
         headerbox.pack_start(headerimage,False,False,0)
         headerbox.pack_start(headerlabel,False,False,0)
         headervseparator = Gtk.Separator()
+        self.spinner  = Gtk.Spinner()
         self._mainbox_.pack_start(headerbox,False,False,0)
         self._mainbox_.pack_start(headervseparator,False,False,0)
-        
-        self.mainhbox = Gtk.HBox()
-        self.vb       = Gtk.HBox()
-        self._mainbox_.pack_start(self.mainhbox,True,True,0)
-        self.mainhbox.pack_start(self.vb,True,True,0)
+        self._mainbox_.pack_start(self.spinner,False,False,0)
         self.gui()
     
     def  gui(self):
+        self.mainhbox = Gtk.HBox()
+        self.vb1      = Gtk.VBox(spacing=10)
+        self.vb2      = Gtk.VBox(spacing=10)
+        self._mainbox_.pack_start(self.mainhbox,True,True,0)
+        self.mainhbox.pack_start(self.vb1,True,True,0)
+        self.mainhbox.pack_start(self.vb2,True,True,0)
         count=0
+        self.addfontlabel = Gtk.Label(_("Add Fonts From Folder"))
+        self.addfontbutton = Gtk.Button(_("Select"))
+        self.vb1.pack_start(self.addfontlabel,True,True,0)
+        self.vb2.pack_start(self.addfontbutton,False,False,0)
+        self.addfontbutton.connect("clicked",self.on_addfontbutton_clicked)
         font_dict = {}
+        font_dict.clear()
         self.combo = Gtk.ComboBoxText()
         self.combo.remove_all()
         self.combo.append(str(count),"None")
@@ -91,9 +100,18 @@ class Plugin(BasePlugin):
         else:
             self.combo.set_active(0)
         self.combo.connect("changed",self.on_combo_changed)
-        self.vb.pack_start(self.combo,True,True,0)
-        self.vb.pack_start(self.label,True,True,0)
+        self.vb1.pack_start(self.label,True,True,0)
+        self.vb2.pack_start(self.combo,False,False,0)
+        self._parent_.show_all()
         
+    def refresh_gui(self):
+        self.mainhbox.remove(self.vb1)
+        self.vb1.destroy()
+        self.mainhbox.remove(self.vb2)
+        self.vb2.destroy()
+        self._mainbox_.remove(self.mainhbox)
+        self.mainhbox.destroy()
+        self.gui()
         
     def on_combo_changed(self,combo):
         iter_ = self.combo.get_active_iter()
@@ -109,3 +127,9 @@ class Plugin(BasePlugin):
                 pangofont = Pango.font_description_from_string(fn)
                 self.label.modify_font(pangofont)
 
+    def on_addfontbutton_clicked(self,button):
+        ffc=font.FolderFontsChooser(self._parent_)
+        s=ffc.start()
+        if s:
+            font.CopyFonts(location=s,parent=self._parent_,spinner=self.spinner,refresh_fuction=self.refresh_gui).start()
+        ffc.destroy()
