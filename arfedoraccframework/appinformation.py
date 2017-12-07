@@ -33,8 +33,8 @@ appname = "arfedoracontrolcenter"
 appwindowtitle       = "ArControlCenter"
 appid="org.github.yucefsourani.ArControlCenter"
 icon_ =  "/usr/share/pixmaps/{}.png".format(appid)
-mainbuttonsizewidth  = 100
-mainbuttonsizeheight = 100
+mainbuttonsizewidth  = 75
+mainbuttonsizeheight = 75
 maxwidgetinrow       = 5
 mainbuttonbold       = False
 
