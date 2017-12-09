@@ -61,6 +61,7 @@ class AppWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         all_category = {}
+        self.switchcategory = {}
         #self.set_border_width(10)
         #self.set_size_request(800, 610)
         #self.set_resizable(False)
@@ -93,15 +94,19 @@ class AppWindow(Gtk.ApplicationWindow):
         grid = Gtk.Grid()
         self.maincontainer.add(grid)
 
-        stack = Gtk.Stack()
-        stack.set_hexpand(True)
-        stack.set_vexpand(True)
-        grid.attach(stack, 1, 0, 1, 1)
+        self.stack = Gtk.Stack()
+        self.stack.set_hexpand(True)
+        self.stack.set_vexpand(True)
+        grid.attach(self.stack, 1, 0, 1, 1)
 
-        
-        stacksidebar = Gtk.StackSidebar()
-        stacksidebar.set_stack(stack)
-        grid.attach(stacksidebar, 0, 0, 1, 1)
+        #sw2=Gtk.ScrolledWindow()
+        listbox_ = Gtk.ListBox()
+        #sw2.add(listbox_)
+        #listbox_.set_hexpand(True)
+        #listbox_.set_vexpand(True)
+        #listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        #grid.attach(sw2, 0, 0, 1, 1)
+        grid.attach(listbox_, 0, 0, 1, 1)
 
 
         all_plugins=plugins_loader.get_plugins()
@@ -148,12 +153,23 @@ class AppWindow(Gtk.ApplicationWindow):
                 category             = plugin.category
                 if category not in all_category.keys():
                     category_label = Gtk.Label("<b>"+category+"</b>",use_markup=True)
+                    category_label.set_margin_left(10)
+                    category_label.set_margin_right(60)
+                    category_label.set_margin_top(10)
+                    category_label.set_margin_bottom(10)
+                    grid__=Gtk.Grid()
+                    grid__.add(category_label)
+                    row_ = Gtk.ListBoxRow(activatable=True)
+                    row_.add(grid__)
+                    listbox_.add(row_)
                     flowbox = Gtk.FlowBox(homogeneous=True)
                     flowbox.set_valign(Gtk.Align.START)
                     flowbox.set_max_children_per_line(maxwidgetinrow)
                     flowbox.set_selection_mode(Gtk.SelectionMode.NONE)
                     all_category.setdefault(category,flowbox)
-                    stack.add_titled(flowbox, category, category)
+                    self.stack.add_named(flowbox, category)
+                    self.switchcategory.setdefault(row_,category)
+                    
                     
             except Exception as e:
                 print(e)
@@ -208,13 +224,19 @@ class AppWindow(Gtk.ApplicationWindow):
             #grid = Gtk.Grid()
             #grid.add(eventbox)
             #all_category[category].add(grid)
+            
             all_category[category].add(b)
+
             
             
-    
+        listbox_.connect("row-activated",self.on_activated_row)
         self.show_all()
 
-    
+    def on_activated_row(self, listbox,listboxrow):
+        self.stack.set_visible_child_name(self.switchcategory[listboxrow])
+
+
+        
     """def on_button_clicked2(self,eventbox,event,plugin,blockclose):
         if not (event.type == Gdk.EventType.BUTTON_PRESS and event.button==1):
             return
