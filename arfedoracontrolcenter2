@@ -28,7 +28,7 @@ from arfedoraccframework.appinformation  import authors_, version_, copyright_, 
 appname, appwindowtitle, appid, homedata, mainbuttonsizewidth, mainbuttonsizeheight, mainbuttonbold, maxwidgetinrow
 import gi
 gi.require_version("Gtk","3.0")
-from gi.repository import Gtk,Gio,GdkPixbuf,GLib,Pango
+from gi.repository import Gtk,Gio,GdkPixbuf,GLib,Pango,Gdk
 
 gettext.install(appname,"/usr/share/locale")
 
@@ -64,7 +64,7 @@ class AppWindow(Gtk.ApplicationWindow):
         #self.set_border_width(10)
         #self.set_size_request(800, 610)
         #self.set_resizable(False)
-        self.resize(800, 610)
+        self.resize(975, 645)
         
         
         self.header=Gtk.HeaderBar()
@@ -73,6 +73,8 @@ class AppWindow(Gtk.ApplicationWindow):
         self.headerhbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.header.pack_start(self.headerhbox)
         self.set_titlebar(self.header)
+        
+        self.maincontainer = Gtk.VBox()
         
         sw=Gtk.ScrolledWindow()
         self.maincontainer = Gtk.VBox(spacing=10)
@@ -87,6 +89,19 @@ class AppWindow(Gtk.ApplicationWindow):
         listbox.add(self.row)
         sw.add(listbox)
         self.add(sw)
+        
+        grid = Gtk.Grid()
+        self.maincontainer.add(grid)
+
+        stack = Gtk.Stack()
+        stack.set_hexpand(True)
+        stack.set_vexpand(True)
+        grid.attach(stack, 1, 0, 1, 1)
+
+        
+        stacksidebar = Gtk.StackSidebar()
+        stacksidebar.set_stack(stack)
+        grid.attach(stacksidebar, 0, 0, 1, 1)
 
 
         all_plugins=plugins_loader.get_plugins()
@@ -133,27 +148,13 @@ class AppWindow(Gtk.ApplicationWindow):
                 category             = plugin.category
                 if category not in all_category.keys():
                     category_label = Gtk.Label("<b>"+category+"</b>",use_markup=True)
-                    hseparator = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
-                    hseparator.set_margin_top(30)
-                    vmaincategorybox = Gtk.VBox(spacing=3)
                     flowbox = Gtk.FlowBox(homogeneous=True)
                     flowbox.set_valign(Gtk.Align.START)
                     flowbox.set_max_children_per_line(maxwidgetinrow)
                     flowbox.set_selection_mode(Gtk.SelectionMode.NONE)
+                    all_category.setdefault(category,flowbox)
+                    stack.add_titled(flowbox, category, category)
                     
-                    h1categorybox = Gtk.HBox()
-                    v1categorybox = Gtk.VBox()
-                    all_category.setdefault(category,[flowbox,vmaincategorybox])
-                    
-                    h1categorybox.pack_start(category_label,False,False,0)
-                    v1categorybox.pack_start(hseparator,False,False,0)
-                    vmaincategorybox.pack_start(h1categorybox,False,False,0)
-                    vmaincategorybox.pack_start(flowbox,False,False,0)
-                    self.maincontainer.pack_start(vmaincategorybox,False,False,0)
-                    self.maincontainer.pack_start(v1categorybox,False,False,0)
-                    
-                
-                         
             except Exception as e:
                 print(e)
                 print("Ignored >> Load {} Fail.".format(plugin))
@@ -171,8 +172,13 @@ class AppWindow(Gtk.ApplicationWindow):
                 except:
                     print("Ignored >> Load {} Fail.".format(module_name))
                     continue
+                    
+
             bvb = Gtk.VBox(spacing=1)
-            
+            ##eventbox.set_has_window(True)
+            ##eventbox.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+            #eventbox = Gtk.EventBox()
+            #eventbox.add(bvb)
             b = Gtk.Button(always_show_image=True,relief=Gtk.ReliefStyle.NONE)
             if mainbuttonbold:
                 bl = Gtk.Label("<b>"+button_label+"</b>",use_markup=True)
@@ -184,22 +190,44 @@ class AppWindow(Gtk.ApplicationWindow):
             bl.set_justify(Gtk.Justification.CENTER)
             if mainbuttontooltip:
                 b.set_tooltip_markup(mainbuttontooltip)
+                #eventbox.set_tooltip_markup(mainbuttontooltip)
             b.set_size_request(mainbuttonsizewidth,mainbuttonsizeheight)
             if priority==1:
                 b.connect("clicked",self.on_button_clicked2,plg,blockclose)
+                #eventbox.connect("button-press-event",self.on_button_clicked2,plg,blockclose)
             elif priority>1:
                 b.connect("clicked",run_function)
+                #eventbox.connect("button-press-event",run_function)
             else:
                 b.connect("clicked",self.on_button_clicked,module_name,blockclose)
+                #eventbox.connect("button-press-event",self.on_button_clicked,module_name,blockclose)
                 del plugin
             bvb.pack_start(image,False,False,0)
             bvb.pack_start(bl,False,False,0)
             b.add(bvb)
-            all_category[category][0].add(b)
+            #grid = Gtk.Grid()
+            #grid.add(eventbox)
+            #all_category[category].add(grid)
+            all_category[category].add(b)
             
             
     
         self.show_all()
+
+    
+    """def on_button_clicked2(self,eventbox,event,plugin,blockclose):
+        if not (event.type == Gdk.EventType.BUTTON_PRESS and event.button==1):
+            return
+        self.row.remove(self.maincontainer)
+        if blockclose:
+            self.header.set_show_close_button(False)
+        backbutton = Gtk.Button()
+        backbutton.connect("clicked",self.on_backbutton_clicked2,plugin,blockclose)
+        backbutton.add(Gtk.Arrow(Gtk.ArrowType.LEFT, Gtk.ShadowType.NONE))
+        self.headerhbox.add(backbutton)
+
+        plugin.run()
+        self.show_all()"""
 
     def on_button_clicked2(self,button,plugin,blockclose):
         self.row.remove(self.maincontainer)
@@ -212,6 +240,7 @@ class AppWindow(Gtk.ApplicationWindow):
 
         plugin.run()
         self.show_all()
+        
 
     def on_backbutton_clicked2(self,button,plugin,blockclose):
         if blockclose:
@@ -223,6 +252,29 @@ class AppWindow(Gtk.ApplicationWindow):
         self.row.add(self.maincontainer)
         #self.show_all()
         
+    """def on_button_clicked(self,eventbox,event,module_name,blockclose):
+        if not (event.type == Gdk.EventType.BUTTON_PRESS and event.button==1):
+            return
+            
+
+        try:
+            module = plugins_loader.load_plugin(module_name)
+            plugin= module.Plugin(self,self.row)
+        except Exception as e :
+            print(e)
+            print("Ignored >> Load {} Fail.".format(module_name))
+            return
+        self.row.remove(self.maincontainer)
+        if blockclose:
+            self.header.set_show_close_button(False)
+        backbutton = Gtk.Button()
+        backbutton.connect("clicked",self.on_backbutton_clicked,plugin,blockclose,module)
+        backbutton.add(Gtk.Arrow(Gtk.ArrowType.LEFT, Gtk.ShadowType.NONE))
+        self.headerhbox.add(backbutton)
+
+        plugin.run()
+        self.show_all()"""
+
     def on_button_clicked(self,button,module_name,blockclose):
         try:
             module = plugins_loader.load_plugin(module_name)
@@ -241,6 +293,7 @@ class AppWindow(Gtk.ApplicationWindow):
 
         plugin.run()
         self.show_all()
+        
     
     def on_backbutton_clicked(self,button,plugin,blockclose,module):
         if blockclose:

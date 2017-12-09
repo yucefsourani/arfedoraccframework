@@ -28,7 +28,7 @@ from arfedoraccframework.appinformation  import authors_, version_, copyright_, 
 appname, appwindowtitle, appid, homedata, mainbuttonsizewidth, mainbuttonsizeheight, mainbuttonbold, maxwidgetinrow
 import gi
 gi.require_version("Gtk","3.0")
-from gi.repository import Gtk,Gio,GdkPixbuf,GLib,Pango
+from gi.repository import Gtk,Gio,GdkPixbuf,GLib,Pango,Gdk
 
 gettext.install(appname,"/usr/share/locale")
 
@@ -171,9 +171,14 @@ class AppWindow(Gtk.ApplicationWindow):
                 except:
                     print("Ignored >> Load {} Fail.".format(module_name))
                     continue
+                    
+
             bvb = Gtk.VBox(spacing=1)
-            
-            b = Gtk.Button(always_show_image=True,relief=Gtk.ReliefStyle.NONE)
+            #eventbox.set_has_window(True)
+            #eventbox.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+            eventbox = Gtk.EventBox()
+            eventbox.add(bvb)
+            #b = Gtk.Button(always_show_image=True,relief=Gtk.ReliefStyle.NONE)
             if mainbuttonbold:
                 bl = Gtk.Label("<b>"+button_label+"</b>",use_markup=True)
             else:
@@ -183,25 +188,32 @@ class AppWindow(Gtk.ApplicationWindow):
             bl.set_max_width_chars(14)
             bl.set_justify(Gtk.Justification.CENTER)
             if mainbuttontooltip:
-                b.set_tooltip_markup(mainbuttontooltip)
-            b.set_size_request(mainbuttonsizewidth,mainbuttonsizeheight)
+                #b.set_tooltip_markup(mainbuttontooltip)
+                eventbox.set_tooltip_markup(mainbuttontooltip)
+            #b.set_size_request(mainbuttonsizewidth,mainbuttonsizeheight)
             if priority==1:
-                b.connect("clicked",self.on_button_clicked2,plg,blockclose)
+                #b.connect("clicked",self.on_button_clicked2,plg,blockclose)
+                eventbox.connect("button-press-event",self.on_button_clicked2,plg,blockclose)
             elif priority>1:
-                b.connect("clicked",run_function)
+                #b.connect("clicked",run_function)
+                eventbox.connect("button-press-event",run_function)
             else:
-                b.connect("clicked",self.on_button_clicked,module_name,blockclose)
+                #b.connect("clicked",self.on_button_clicked,module_name,blockclose)
+                eventbox.connect("button-press-event",self.on_button_clicked,module_name,blockclose)
                 del plugin
             bvb.pack_start(image,False,False,0)
             bvb.pack_start(bl,False,False,0)
-            b.add(bvb)
-            all_category[category][0].add(b)
+            #b.add(bvb)
+            all_category[category][0].add(eventbox)
             
             
     
         self.show_all()
 
-    def on_button_clicked2(self,button,plugin,blockclose):
+    
+    def on_button_clicked2(self,eventbox,event,plugin,blockclose):
+        if not (event.type == Gdk.EventType.BUTTON_PRESS and event.button==1):
+            return
         self.row.remove(self.maincontainer)
         if blockclose:
             self.header.set_show_close_button(False)
@@ -223,7 +235,11 @@ class AppWindow(Gtk.ApplicationWindow):
         self.row.add(self.maincontainer)
         #self.show_all()
         
-    def on_button_clicked(self,button,module_name,blockclose):
+    def on_button_clicked(self,eventbox,event,module_name,blockclose):
+        if not (event.type == Gdk.EventType.BUTTON_PRESS and event.button==1):
+            return
+            
+
         try:
             module = plugins_loader.load_plugin(module_name)
             plugin= module.Plugin(self,self.row)
