@@ -41,7 +41,7 @@ class RunRoot (object):
     
     def callf(self,a,timeout=1000000):
         try:
-            check =  self.dbus_interface.call(a,timeout=timeout)
+            check =  self.dbus_interface.callf(a,timeout=timeout)
         except:
             return 1
         return check
@@ -55,7 +55,7 @@ class RunRoot (object):
 
     def Popenf(self,a,timeout=1000000):
         try:
-            out,err = self.dbus_interface.Popen(a,timeout=timeout)
+            out,err = self.dbus_interface.Popenf(a,timeout=timeout)
         except:
             return ["","error"]
         return [out,err]
