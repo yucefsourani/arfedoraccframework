@@ -23,6 +23,9 @@ import os
 from arfedoraccframework.appinformation import  homeconfig, appname, homedata
 import time
 import subprocess
+import gi
+gi.require_version("Gtk","3.0")
+from gi.repository import Gtk
 
 arch = os.uname().machine
 distro_desktop = os.getenv("XDG_CURRENT_DESKTOP",False)
@@ -39,6 +42,8 @@ def get_icon_location(iconname):
         return iconlocation[0]
     return False
     
+def get_icon_theme(iconname,size,flag):
+    return Gtk.IconTheme.get_default().load_icon(iconname, size, flag)
     
 def get_file_to_run(write=False,chmod=False,add=""):
     try:

@@ -52,7 +52,7 @@ if_false_skip        = os.path.isfile("/etc/selinux/config")
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 0
-
+category_icon_theme  = "applications-system"
 
 def set_selinux_mode(oldmode,newmode):
     result = ""

@@ -43,7 +43,7 @@ if_false_skip        = all([ os.path.isfile("/usr/bin/lxappearance") ,os.path.is
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 0
-    
+category_icon_theme  = "applications-system"
 
 
 class Plugin(BasePlugin):

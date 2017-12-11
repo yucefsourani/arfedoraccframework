@@ -25,7 +25,7 @@ import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,GdkPixbuf, Pango
 from arfedoraccframework.baseplugin import BasePlugin
-from arfedoraccframework.baseutils import get_icon_location
+from arfedoraccframework.baseutils import get_icon_location, fedora_get_grub_menufile
 from arfedoraccframework.widgetsutils import RunTextView
 
 button_label         = _("Update Grub2 Menu")
@@ -38,11 +38,11 @@ distro_version       = ["all"]
 mainbuttontooltip    = _("Update Grub2 Boot Loader Menu")
 blockclose           = False
 if_true_skip         = False
-if_false_skip        = os.path.isfile("/etc/arch-release")
+if_false_skip        = os.path.isfile("/etc/fedora-release")
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 0
-
+category_icon_theme  = "applications-utilities"
 
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
@@ -69,7 +69,7 @@ class Plugin(BasePlugin):
         headervseparator.set_margin_bottom(10)
         headervseparator.set_margin_top(30)
         self.spinner = Gtk.Spinner()
-        self.t = RunTextView (self._parent_,True,[["pkexec grub-mkconfig -o  /boot/grub/grub.cfg","free",True]],\
+        self.t = RunTextView (self._parent_,True,[["pkexec grub2-mkconfig -o  "+fedora_get_grub_menufile(),"free",True]],\
         cursor_visible=True,end="\n",justification=Gtk.Justification.CENTER,spinner=self.spinner)
         self.t.set_size_request (200,200)
         button = Gtk.Button(_("Update"))

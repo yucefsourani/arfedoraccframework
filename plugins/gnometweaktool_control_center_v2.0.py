@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  mate_shell_center_v1.0.py
+#  gnometweaktool_control_center_v1.0.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -26,21 +26,25 @@ import subprocess
 
 
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
+if os.path.isfile("/usr/bin/gnome-tweak-tool") and "GNOME" in desktop:
+    desktop = "GNOMETWEAKTOOL"
 
-button_label         = _("Mate Control Center")
-button_image         = "mate_desktop_logo.jpg"
+button_label         = _("Gnome Tweak Tool")
+button_image         = "gnome_tweak_tool_22409.png"
 category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Mate Control Center")
+mainbuttontooltip    = _("Gnome Tweak Tool")
 blockclose           = False
 if_true_skip         = False
-if_false_skip        = True if "MATE" in desktop else False
+if_false_skip        = True if "GNOMETWEAKTOOL" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-    
+category_icon_theme  = "applications-system" 
+
 def Run(button):
-    subprocess.Popen("/usr/bin/mate-control-center",shell=True)
+    subprocess.Popen("/usr/bin/gnome-tweak-tool",shell=True)
+

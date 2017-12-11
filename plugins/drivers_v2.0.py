@@ -51,6 +51,7 @@ if_false_skip        = os.path.isfile("/usr/bin/dnf")
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 0
+category_icon_theme  = "applications-system" 
 
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):

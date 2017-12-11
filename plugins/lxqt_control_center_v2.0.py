@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  example_v1.0.py
+#  lxqt_control_center_v1.0.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -21,36 +21,27 @@
 #  MA 02110-1301, USA.
 #  
 #  
-import gi
-gi.require_version("Gtk","3.0")
-from gi.repository import Gtk
-from arfedoraccframework.baseplugin import BasePlugin
-from arfedoraccframework.baseutils import get_icon_location
+import os
+import subprocess
 
-button_label         = _("Example")
-button_image         = "tools_settings_tool_preferences-512.png"
+
+desktop=os.getenv("XDG_CURRENT_DESKTOP")
+
+button_label         = _("Lxqt Control Center")
+button_image         = "lxqt_logo_by_i_sty-d7rmlxd.png"
 category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("For Testing")
-blockclose           = True
+mainbuttontooltip    = _("Lxqt Control Center")
+blockclose           = False
 if_true_skip         = False
-if_false_skip        = True
+if_false_skip        = True if "X-LXQt" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
-priority             = 0
+priority             = 3
+category_icon_theme  = "applications-system"
 
-print("#########################################################################")
-class Plugin(BasePlugin):
-    def __init__(self,parent,boxparent):
-        BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
-        
-        logo_location = get_icon_location("1200px-Tux.svg.png")
-        image = Gtk.Image.new_from_file(logo_location)
-        
-        self._mainbox_.pack_start(image,False,False,0)
-        
-        
-        
+def Run(button):
+    subprocess.Popen("/usr/bin/lxqt-config",shell=True)

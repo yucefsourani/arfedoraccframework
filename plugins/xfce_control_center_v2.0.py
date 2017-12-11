@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  kde_control_centet_v1.0.py
+#  xfce_control_center_v1.0.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -26,21 +26,21 @@ import subprocess
 
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
-button_label         = _("Plasma Control Center")
-button_image         = "11949942481641741323about_kde.svg.hi.png"
+button_label         = _("XFCE Control Center")
+button_image         = "XFCE-full.sh.png"
 category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Plasma Control Center")
+mainbuttontooltip    = _("XFCE Control Center")
 blockclose           = False
 if_true_skip         = False
-if_false_skip        = True if "KDE" in desktop else False
+if_false_skip        = True if "XFCE" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-    
-def Run(button):
-    subprocess.Popen("/usr/bin/systemsettings5",shell=True)
+category_icon_theme  = "applications-system"
 
+def Run(button):
+    subprocess.Popen("/usr/bin/xfce4-settings-manager",shell=True)

@@ -43,7 +43,7 @@ if_false_skip        = True
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 0
-    
+category_icon_theme  = "applications-utilities" 
 
 def get_bin_path(command):
     path = [p for p in os.environ["PATH"].split(":") if os.path.isdir(p)]

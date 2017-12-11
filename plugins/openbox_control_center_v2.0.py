@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  hawaii_shell_center_v1.0.py
+#  openbox_control_center_v1.0.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -26,22 +26,25 @@ import subprocess
 
 
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
+if desktop=="":
+    if os.getenv("DESKTOP_SESSION")=="/usr/share/xsessions/openbox":
+        desktop = "OpenBox"
 
-button_label         = _("Hawaii Center")
-button_image         = "clip_art_illustration_of_a_beautiful_colorful_parrot_sitting_on_a_branch_the_background_has_a_rainbow_and_palm_trees_0515-1102-0914-3316_SMU.jpg"
+button_label         = _("OpenBox Control Center")
+button_image         = "Openbox-logo.png"
 category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Hawaii Control Center")
+mainbuttontooltip    = _("OpenBox Control Center")
 blockclose           = False
 if_true_skip         = False
-if_false_skip        = True if "X-Hawaii" in desktop else False
+if_false_skip        = True if "OpenBox" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-    
-def Run(button):
-    subprocess.Popen("/usr/bin/hawaii-system-preferences",shell=True)
+category_icon_theme  = "applications-system"
 
+def Run(button):
+    subprocess.Popen("/usr/bin/obconf",shell=True)

@@ -33,11 +33,12 @@ appname = "arfedoracontrolcenter"
 appwindowtitle       = "ArControlCenter"
 appid="org.github.yucefsourani.ArControlCenter"
 icon_ =  "/usr/share/pixmaps/{}.png".format(appid)
-mainbuttonsizewidth  = 75
-mainbuttonsizeheight = 75
-maxwidgetinrow       = 5
-mainbuttonbold       = False
-
+mainbuttonsizewidth      = 75
+mainbuttonsizeheight     = 75
+maxwidgetinrow           = 5
+mainbuttonbold           = False
+category_icon_theme_size = 32
+category_icon_theme_flag = 0
 
 #dont change this
 homeconfig = GLib.get_user_config_dir()+"/"+appname

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  openbox_control_center_v1.0.py
+#  cinnamon_control_center_v1.0.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -26,24 +26,22 @@ import subprocess
 
 
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
-if desktop=="":
-    if os.getenv("DESKTOP_SESSION")=="/usr/share/xsessions/openbox":
-        desktop = "OpenBox"
 
-button_label         = _("OpenBox Control Center")
-button_image         = "Openbox-logo.png"
+button_label         = _("Cinnamon Control Center")
+button_image         = "mintlogo-kde.svg"
 category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("OpenBox Control Center")
+mainbuttontooltip    = _("Cinnamon Control Center")
 blockclose           = False
 if_true_skip         = False
-if_false_skip        = True if "OpenBox" in desktop else False
+if_false_skip        = True if "X-Cinnamon" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-    
+category_icon_theme  = "applications-system"
+
 def Run(button):
-    subprocess.Popen("/usr/bin/obconf",shell=True)
+    subprocess.Popen("/usr/share/cinnamon/cinnamon-settings/cinnamon-settings.py",shell=True)

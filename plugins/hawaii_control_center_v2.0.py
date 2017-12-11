@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  cinnamon_control_center_v1.0.py
+#  hawaii_shell_center_v1.0.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -27,20 +27,22 @@ import subprocess
 
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
-button_label         = _("Cinnamon Control Center")
-button_image         = "mintlogo-kde.svg"
+button_label         = _("Hawaii Center")
+button_image         = "clip_art_illustration_of_a_beautiful_colorful_parrot_sitting_on_a_branch_the_background_has_a_rainbow_and_palm_trees_0515-1102-0914-3316_SMU.jpg"
 category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Cinnamon Control Center")
+mainbuttontooltip    = _("Hawaii Control Center")
 blockclose           = False
 if_true_skip         = False
-if_false_skip        = True if "X-Cinnamon" in desktop else False
+if_false_skip        = True if "X-Hawaii" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-    
+category_icon_theme  = "applications-system"
+
 def Run(button):
-    subprocess.Popen("/usr/share/cinnamon/cinnamon-settings/cinnamon-settings.py",shell=True)
+    subprocess.Popen("/usr/bin/hawaii-system-preferences",shell=True)
+

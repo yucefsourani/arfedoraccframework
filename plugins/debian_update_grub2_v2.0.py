@@ -42,7 +42,7 @@ if_false_skip        = os.path.isfile("/usr/sbin/update-grub")
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 0
-
+category_icon_theme  = "applications-utilities"
 
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):

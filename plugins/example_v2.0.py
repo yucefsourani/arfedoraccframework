@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  xfce_control_center_v1.0.py
+#  example_v1.0.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -21,25 +21,37 @@
 #  MA 02110-1301, USA.
 #  
 #  
-import os
-import subprocess
+import gi
+gi.require_version("Gtk","3.0")
+from gi.repository import Gtk
+from arfedoraccframework.baseplugin import BasePlugin
+from arfedoraccframework.baseutils import get_icon_location
 
-desktop=os.getenv("XDG_CURRENT_DESKTOP")
-
-button_label         = _("XFCE Control Center")
-button_image         = "XFCE-full.sh.png"
+button_label         = _("Example")
+button_image         = "tools_settings_tool_preferences-512.png"
 category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("XFCE Control Center")
-blockclose           = False
+mainbuttontooltip    = _("For Testing")
+blockclose           = True
 if_true_skip         = False
-if_false_skip        = True if "XFCE" in desktop else False
+if_false_skip        = True
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
-priority             = 3
-    
-def Run(button):
-    subprocess.Popen("/usr/bin/xfce4-settings-manager",shell=True)
+priority             = 0
+category_icon_theme  = "applications-system"
+
+print("#########################################################################")
+class Plugin(BasePlugin):
+    def __init__(self,parent,boxparent):
+        BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
+        
+        logo_location = get_icon_location("1200px-Tux.svg.png")
+        image = Gtk.Image.new_from_file(logo_location)
+        
+        self._mainbox_.pack_start(image,False,False,0)
+        
+        
+        
