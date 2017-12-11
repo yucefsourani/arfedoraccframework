@@ -24,7 +24,7 @@ import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,GdkPixbuf, Pango, GLib
 from arfedoraccframework.baseplugin import BasePlugin
-from arfedoraccframework.baseutils import get_icon_location, fedora_get_grub_menufile, get_file_to_run
+from arfedoraccframework.baseutils import get_icon_location, get_file_to_run
 from collections import OrderedDict
 from arfedoraccframework.runinroot import runinroot
 from arfedoraccframework.widgetsutils import Yes_Or_No
@@ -40,8 +40,8 @@ distro_name          = ["all"]
 distro_version       = ["all"]
 mainbuttontooltip    = _("Config Grub2 Boot Loader")
 blockclose           = False
-if_true_skip         = False
-if_false_skip        = os.path.isfile("/etc/fedora-release")
+if_true_skip         = os.path.isfile("/etc/fedora-release")
+if_false_skip        = True
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 0
@@ -57,8 +57,7 @@ class copy_config_and_apply(threading.Thread):
     def run(self):
         GLib.idle_add(self.parent.set_sensitive,False)
         GLib.idle_add(self.spinner.start)
-        grubmenuconfig = fedora_get_grub_menufile()
-        check = runinroot.call("cp {} /etc/default/grub && /usr/sbin/grub2-mkconfig -o  {}".format(self.file_,grubmenuconfig))
+        check = runinroot.call("cp {} /etc/default/grub && /usr/sbin/grub-mkconfig -o /boot/grub/grub.cfg".format(self.file_))
         GLib.idle_add(self.parent.set_sensitive,True)
         GLib.idle_add(self.spinner.stop)
         GLib.idle_add(self.refresh_func)
