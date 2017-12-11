@@ -67,7 +67,7 @@ class Backend (slip.dbus.service.Object):
                 
     @dbus.service.method(dbus_interface = dbus_service_name + ".Backend")    
     def Version(self):
-        return "1.0"
+        return "2.0"
         
 
         
