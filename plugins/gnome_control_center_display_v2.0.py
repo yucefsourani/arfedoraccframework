@@ -1,7 +1,7 @@
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  gnometweaktool_control_center_v1.0.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -26,25 +26,24 @@ import subprocess
 
 
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
-if os.path.isfile("/usr/bin/gnome-tweak-tool") and "GNOME" in desktop:
-    desktop = "GNOMETWEAKTOOL"
 
-button_label         = _("Gnome Tweak Tool")
-button_image         = "gnome_tweak_tool_22409.png"
+
+button_label         = _( "display" )
+button_image         = [ "video-display" ]
 category             = _("Gnome")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Tweak Tool")
+mainbuttontooltip    = _("Gnome Control Center display")
 blockclose           = False
 if_true_skip         = False
-if_false_skip        = True if "GNOMETWEAKTOOL" in desktop else False
+if_false_skip        = True if "GNOME" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-category_icon_theme  = "applications-system" 
+category_icon_theme  = "start-here" 
 
 def Run(button):
-    subprocess.Popen("/usr/bin/gnome-tweak-tool",shell=True)
+    subprocess.Popen("/usr/bin/gnome-control-center display",shell=True)
 

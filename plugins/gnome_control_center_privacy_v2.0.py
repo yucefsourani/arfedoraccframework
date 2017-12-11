@@ -1,7 +1,7 @@
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  gnome_shell_center.py
 #  
 #  Copyright 2017 youcef sourani <youssef.m.sourani@gmail.com>
 #  
@@ -27,22 +27,23 @@ import subprocess
 
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
-button_label         = _("Gnome Control Center")
-button_image         = "gnome-logo-icon-23471.png"
-category             = _("System")
+
+button_label         = _( "privacy" )
+button_image         = [ "security-medium" ]
+category             = _("Gnome")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center")
+mainbuttontooltip    = _("Gnome Control Center privacy")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-category_icon_theme  = "applications-system"
+category_icon_theme  = "start-here" 
 
 def Run(button):
-    subprocess.Popen("/usr/bin/gnome-control-center",shell=True)
+    subprocess.Popen("/usr/bin/gnome-control-center privacy",shell=True)
 
