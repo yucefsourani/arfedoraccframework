@@ -43,7 +43,7 @@ if_false_skip        = True if "GNOMETWEAKTOOL" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-category_icon_theme  = "applications-system" 
+category_icon_theme  = "preferences-desktop-personal" 
 
 def Run(button):
     subprocess.Popen("/usr/bin/gnome-tweak-tool",shell=True)
