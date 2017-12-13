@@ -24,7 +24,7 @@ from gi.repository import GLib
 
 
 authors_ = ["Youssef Sourani <youssef.m.sourani@gmail.com>"]
-version_ = "2.0"
+version_ = "2.2"
 copyright_ ="Copyright © 2017 Youssef Sourani"
 comments_ = "ArControlCenter"
 website_ = "https://arfedora.blogspot.com"
