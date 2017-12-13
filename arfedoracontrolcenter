@@ -123,7 +123,7 @@ class AppWindow(Gtk.ApplicationWindow):
                 to_ignore.append("gnome_control_center_3.26")
             elif gnome_version>=3.26:
                 to_ignore.append("gnome_control_center_3.24")
-        print(to_ignore)
+
         if to_ignore:        
             all_plugins=plugins_loader.get_plugins(to_ignore)
         else:
