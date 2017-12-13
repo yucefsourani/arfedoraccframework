@@ -35,7 +35,7 @@ title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center network")
+mainbuttontooltip    = _("Gnome Control Center Network")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False
@@ -45,5 +45,5 @@ priority             = 3
 category_icon_theme  = "emblem-system" 
 
 def Run(button):
-    subprocess.Popen("/usr/bin/gnome-control-center Network",shell=True)
+    subprocess.Popen("/usr/bin/gnome-control-center network",shell=True)
 
