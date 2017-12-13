@@ -102,9 +102,13 @@ class Plugin(BasePlugin):
             vbox.pack_start(uservseparator,False,False,0)
             vbox.pack_start(userlabel,False,False,0)
             vbox.pack_start(h,False,False,0)
-            
+            listbox1 = Gtk.ListBox()
+            vbox.pack_start(listbox1,False,False,0)
             for k,v in self.user_enabled_disabled_service.items():
+                row = Gtk.ListBoxRow(activatable=True)
+                listbox1.add(row)
                 h = Gtk.HBox()
+                row.add(h)
                 h.set_homogeneous (True)
                 labelhbox = Gtk.HBox()
                 label  = Gtk.Label(k)
@@ -133,7 +137,8 @@ class Plugin(BasePlugin):
                 h.pack_start(labelhbox,True,True,0)
                 h.pack_start(switchhbox,True,True,0)
                 h.pack_start(switchhbox_,True,True,0)
-                vbox.pack_start(h,False,False,0)
+                
+                
         
 
 
@@ -161,9 +166,13 @@ class Plugin(BasePlugin):
             vbox.pack_start(systemvseparator,False,False,0)
             vbox.pack_start(systemlabel,False,False,0)
             vbox.pack_start(h,False,False,0)
-            
+            listbox2 = Gtk.ListBox()
+            vbox.pack_start(listbox2,False,False,0)
             for k,v in self.system_enabled_disabled_service.items():
+                row2 = Gtk.ListBoxRow(activatable=True)
+                listbox2.add(row2)
                 h = Gtk.HBox()
+                row2.add(h)
                 h.set_homogeneous (True)
                 labelhbox2 = Gtk.HBox()
                 label2  = Gtk.Label(k)
@@ -192,7 +201,8 @@ class Plugin(BasePlugin):
                 h.pack_start(labelhbox2,True,True,0)
                 h.pack_start(switchhbox2,True,True,0)
                 h.pack_start(switchhbox2_,True,True,0)
-                vbox.pack_start(h,False,False,0)
+                
+                
         
 
 

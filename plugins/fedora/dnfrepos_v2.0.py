@@ -87,9 +87,13 @@ class Plugin(BasePlugin):
         
 
         
-        
+        listbox_dnf = Gtk.ListBox()
+        vbox.pack_start(listbox_dnf,False,False,0)
         for name,repo in self.repos.items():
+            row_dnf = Gtk.ListBoxRow(activatable=True)
+            listbox_dnf.add(row_dnf)
             h = Gtk.HBox(spacing=10)
+            row_dnf.add(h)
             h.set_homogeneous (True)
             labelhbox = Gtk.HBox()
             switchhbox = Gtk.HBox()
@@ -108,7 +112,8 @@ class Plugin(BasePlugin):
             switchhbox.pack_start(self.switch,True,False,0)
             h.pack_start(labelhbox,True,True,0)
             h.pack_start(switchhbox,True,True,0)
-            vbox.pack_start(h,False,False,0)
+            
+            
             
 
 
