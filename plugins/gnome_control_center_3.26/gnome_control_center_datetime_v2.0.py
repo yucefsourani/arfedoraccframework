@@ -28,22 +28,22 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "Mouse And Touchpad" )
-button_image         = [ "input-mouse" ]
-category             = _("Hardware")
+button_label         = _( "Date And Time" )
+button_image         = [ "appointment-soon" ]
+category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center mouse")
+mainbuttontooltip    = _("Gnome Control Center Date And Time")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-category_icon_theme  = "emblem-system" 
+category_icon_theme  = "applications-system" 
 
 def Run(button):
-    subprocess.Popen("/usr/bin/gnome-control-center Mouse & Touchpad",shell=True)
+    subprocess.Popen("/usr/bin/gnome-control-center datetime",shell=True)
 

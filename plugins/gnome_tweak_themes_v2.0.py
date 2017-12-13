@@ -47,7 +47,7 @@ if_false_skip        = True if "GNOME" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 0
-category_icon_theme  = "applications-utilities"
+category_icon_theme  = "preferences-desktop-personal"
 
 """mac_extensions_to_enable = ["user-theme@gnome-shell-extensions.gcampax.github.com",
                             "clipboard-indicator@tudmotu.com",

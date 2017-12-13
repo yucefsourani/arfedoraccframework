@@ -23,6 +23,7 @@ import os
 import sys
 import gettext
 from  arfedoraccframework import plugins_loader
+from  arfedoraccframework import basegnome
 from  arfedoraccframework.baseutils import arch, get_distro_name, get_distro_version,get_icon_theme
 from arfedoraccframework.appinformation  import authors_, version_, copyright_, comments_, website_,icon_, translators_, \
 appname, appwindowtitle, appid, homedata, mainbuttonsizewidth, mainbuttonsizeheight, mainbuttonbold, maxwidgetinrow,\
@@ -108,9 +109,26 @@ class AppWindow(Gtk.ApplicationWindow):
         #listbox.set_selection_mode(Gtk.SelectionMode.NONE)
         #grid.attach(sw2, 0, 0, 1, 1)
         grid.attach(listbox_, 0, 0, 1, 1)
+        
+        to_ignore = []
+        if not os.path.isfile("/usr/bin/dnf"):
+            to_ignore.append("fedora")
+        try:
+            gnome = basegnome.GnomeShell([])
+            gnome_version = float(gnome.version()[0:4])
+        except:
+            gnome_version = None
+        if  gnome_version:
+            if gnome_version<3.26:
+                to_ignore.append("gnome_control_center_3.26")
+            elif gnome_version>=3.26:
+                to_ignore.append("gnome_control_center_3.24")
+        print(to_ignore)
+        if to_ignore:        
+            all_plugins=plugins_loader.get_plugins(to_ignore)
+        else:
+            all_plugins=plugins_loader.get_plugins()
 
-
-        all_plugins=plugins_loader.get_plugins()
         for module_name in all_plugins:
             plugin = plugins_loader.load_plugin(module_name)
             if not plugin:

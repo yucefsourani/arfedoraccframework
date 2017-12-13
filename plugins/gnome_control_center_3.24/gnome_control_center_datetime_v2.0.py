@@ -28,7 +28,7 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "Date & Time" )
+button_label         = _( "Date And Time" )
 button_image         = [ "appointment-soon" ]
 category             = _("System")
 title                = _("For Test")
