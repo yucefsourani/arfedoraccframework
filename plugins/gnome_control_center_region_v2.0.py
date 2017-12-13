@@ -28,22 +28,22 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "Keyboard" )
-button_image         = [ "input-keyboard" ]
-category             = _("Hardware")
+button_label         = _( "Region & Lanquage" )
+button_image         = [ "preferences-desktop-locale" ]
+category             = _("Personal")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center Keyboard")
+mainbuttontooltip    = _("Gnome Control Center Region And Lanquage")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-category_icon_theme  = "start-here" 
+category_icon_theme  = "preferences-desktop-personal" 
 
 def Run(button):
-    subprocess.Popen("/usr/bin/gnome-control-center keyboard",shell=True)
+    subprocess.Popen("/usr/bin/gnome-control-center region",shell=True)
 

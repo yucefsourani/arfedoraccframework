@@ -39,7 +39,7 @@ import threading
     
 button_label         = _("Drivers Manager")
 button_image         = "primary-exec.png"
-category             = _("System")
+category             = _("Hardware")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]

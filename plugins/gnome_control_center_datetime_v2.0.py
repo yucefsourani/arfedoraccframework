@@ -35,14 +35,14 @@ title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center Date & Time")
+mainbuttontooltip    = _("Gnome Control Center Date And Time")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-category_icon_theme  = "start-here" 
+category_icon_theme  = "applications-system" 
 
 def Run(button):
     subprocess.Popen("/usr/bin/gnome-control-center datetime",shell=True)

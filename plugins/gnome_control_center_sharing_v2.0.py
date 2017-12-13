@@ -42,7 +42,7 @@ if_false_skip        = True if "GNOME" in desktop else False
 if_one_true_skip     = [False]
 if_all_true_skip     = [True,False]
 priority             = 3
-category_icon_theme  = "start-here" 
+category_icon_theme  = "applications-system" 
 
 def Run(button):
     subprocess.Popen("/usr/bin/gnome-control-center sharing",shell=True)

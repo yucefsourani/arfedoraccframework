@@ -29,7 +29,7 @@ import arfedoraccframework.basefonts as font
 
 button_label         = _("Manager Arabic Fonts")
 button_image         = "kacsttitle.gif"
-category             = _("System")
+category             = _("Personal")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
