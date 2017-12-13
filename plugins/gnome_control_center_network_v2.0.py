@@ -28,9 +28,9 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "network" )
+button_label         = _( "Network" )
 button_image         = [ "network-wireless" ]
-category             = _("Gnome")
+category             = _("Hardware")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
@@ -45,5 +45,5 @@ priority             = 3
 category_icon_theme  = "start-here" 
 
 def Run(button):
-    subprocess.Popen("/usr/bin/gnome-control-center network",shell=True)
+    subprocess.Popen("/usr/bin/gnome-control-center Network",shell=True)
 

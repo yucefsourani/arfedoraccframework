@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "Default apps" )
+button_label         = _( "Default Apps" )
 button_image         = [ "applications-other" ]
-category             = _("Gnome")
+category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center Default apps")
+mainbuttontooltip    = _("Gnome Control Center Default Apps")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False

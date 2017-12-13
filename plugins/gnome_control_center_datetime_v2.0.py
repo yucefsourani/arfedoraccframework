@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "datetime" )
+button_label         = _( "Date & Time" )
 button_image         = [ "appointment-soon" ]
-category             = _("Gnome")
+category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center datetime")
+mainbuttontooltip    = _("Gnome Control Center Date & Time")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False

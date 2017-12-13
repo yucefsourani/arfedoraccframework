@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "sound" )
+button_label         = _( "Sound" )
 button_image         = [ "audio-volume-high" ]
-category             = _("Gnome")
+category             = _("Hardware")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center sound")
+mainbuttontooltip    = _("Gnome Control Center Sound")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False

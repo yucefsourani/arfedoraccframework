@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "privacy" )
+button_label         = _( "Privacy" )
 button_image         = [ "security-medium" ]
-category             = _("Gnome")
+category             = _("Personal")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center privacy")
+mainbuttontooltip    = _("Gnome Control Center Privacy")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False

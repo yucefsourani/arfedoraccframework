@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "power" )
+button_label         = _( "Power" )
 button_image         = [ "battery" ]
-category             = _("Gnome")
+category             = _("Hardware")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center power")
+mainbuttontooltip    = _("Gnome Control Center Power")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False

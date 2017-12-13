@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "Removable media" )
+button_label         = _( "Removable Media" )
 button_image         = [ "media-eject" ]
-category             = _("Gnome")
+category             = _("System")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center Removable media")
+mainbuttontooltip    = _("Gnome Control Center Removable Media")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False

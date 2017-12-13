@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "background" )
+button_label         = _( "Background" )
 button_image         = [ "preferences-desktop-wallpaper" ]
-category             = _("Gnome")
+category             = _("Personal")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center background")
+mainbuttontooltip    = _("Gnome Control Center Background")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False

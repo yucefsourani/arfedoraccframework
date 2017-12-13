@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "printers" )
+button_label         = _( "Printers" )
 button_image         = [ "printer" ]
-category             = _("Gnome")
+category             = _("Hardware")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center printers")
+mainbuttontooltip    = _("Gnome Control Center Printers")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False

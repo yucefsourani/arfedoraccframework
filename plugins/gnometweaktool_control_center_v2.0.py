@@ -31,7 +31,7 @@ if os.path.isfile("/usr/bin/gnome-tweak-tool") and "GNOME" in desktop:
 
 button_label         = _("Gnome Tweak Tool")
 button_image         = "gnome_tweak_tool_22409.png"
-category             = _("Gnome")
+category             = _("Personal")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]

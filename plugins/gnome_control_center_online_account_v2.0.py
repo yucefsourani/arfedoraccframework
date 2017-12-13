@@ -28,14 +28,14 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "online accounts" )
+button_label         = _( "Online Accounts" )
 button_image         = [ "applications-internet" ]
-category             = _("Gnome")
+category             = _("Personal")
 title                = _("For Test")
 arch                 = ["all"]
 distro_name          = ["all"]
 distro_version       = ["all"]
-mainbuttontooltip    = _("Gnome Control Center online-accounts")
+mainbuttontooltip    = _("Gnome Control Center Online Accounts")
 blockclose           = False
 if_true_skip         = False
 if_false_skip        = True if "GNOME" in desktop else False
