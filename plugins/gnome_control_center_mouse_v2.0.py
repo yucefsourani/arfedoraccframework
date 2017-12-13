@@ -28,7 +28,7 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "Mouse & Touchpad" )
+button_label         = _( "Mouse And Touchpad" )
 button_image         = [ "input-mouse" ]
 category             = _("Hardware")
 title                = _("For Test")

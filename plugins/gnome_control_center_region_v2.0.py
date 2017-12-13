@@ -28,7 +28,7 @@ import subprocess
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
 
-button_label         = _( "Region & Lanquage" )
+button_label         = _( "Region And Lanquage" )
 button_image         = [ "preferences-desktop-locale" ]
 category             = _("Personal")
 title                = _("For Test")

@@ -36,7 +36,7 @@ icon_ =  "/usr/share/pixmaps/{}.png".format(appid)
 mainbuttonsizewidth      = 50
 mainbuttonsizeheight     = 50
 maxwidgetinrow           = 5
-mainbuttonbold           = False
+mainbuttonbold           = True
 category_icon_theme_size = 32
 category_icon_theme_flag = 0
 
