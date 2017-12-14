@@ -72,6 +72,8 @@ class Plugin(BasePlugin):
         self.headerbox.pack_start(headerimage,False,False,0)
         self.headerbox.pack_start(headerlabel,False,False,0)
         self._mainbox_.pack_start(self.headerbox,False,False,0)
+
+
         
         self.mainhbox = Gtk.HBox()
         vbox     = Gtk.VBox(spacing=20)
@@ -92,6 +94,24 @@ class Plugin(BasePlugin):
             user_sthbox.pack_start(user_st,False,False,0)
         
             userlabel = Gtk.Label(_("<b>User Services</b>"),use_markup=True)
+            searchicon = Gtk.Image()
+            searchicon.set_from_icon_name("edit-find-symbolic", Gtk.IconSize.BUTTON)
+            self.searchbutton = Gtk.ToggleButton()
+            self.searchbutton.add(searchicon)
+            hboxbutton = Gtk.HBox()
+            hboxbutton.pack_start(self.searchbutton,True,False,0)
+            self.searchbutton.connect("toggled", self._on_transition1)
+            self.revealer1 = Gtk.Revealer()
+            hboxrevealer = Gtk.HBox()
+            hboxrevealer.pack_start(self.revealer1,True,False,0)
+            self.entry1 = Gtk.SearchEntry(placeholder_text="Search Service")
+            self.entry1.props.margin_left = 15
+            self.entry1.props.margin_right = 15
+            self.entry1.props.margin_top = 5
+            self.entry1.props.margin_bottom = 5
+            self.entry1.connect("search-changed", self._on_search1)
+            self.revealer1.add(self.entry1)
+            
             uservseparator = Gtk.Separator()
             uservseparator.set_margin_top(30)
             h = Gtk.HBox()
@@ -101,12 +121,15 @@ class Plugin(BasePlugin):
             h.pack_start(user_sthbox,True,False,0)
             vbox.pack_start(uservseparator,False,False,0)
             vbox.pack_start(userlabel,False,False,0)
+            vbox.pack_start(hboxbutton,False,False,0)
+            vbox.pack_start(hboxrevealer,False,False,0)
             vbox.pack_start(h,False,False,0)
-            listbox1 = Gtk.ListBox()
-            vbox.pack_start(listbox1,False,False,0)
+            self.listbox1 = Gtk.ListBox()
+            self.listbox1.set_filter_func(self._list_filter_func1, None)
+            vbox.pack_start(self.listbox1,False,False,0)
             for k,v in self.user_enabled_disabled_service.items():
                 row = Gtk.ListBoxRow(activatable=True)
-                listbox1.add(row)
+                self.listbox1.add(row)
                 h = Gtk.HBox()
                 row.add(h)
                 h.set_homogeneous (True)
@@ -138,7 +161,7 @@ class Plugin(BasePlugin):
                 h.pack_start(switchhbox,True,True,0)
                 h.pack_start(switchhbox_,True,True,0)
                 
-                
+
         
 
 
@@ -156,6 +179,24 @@ class Plugin(BasePlugin):
             system_sthbox.pack_start(system_st,False,False,0)
             
             systemlabel = Gtk.Label(_("<b>System Services</b>"),use_markup=True)
+            searchicon = Gtk.Image()
+            searchicon.set_from_icon_name("edit-find-symbolic", Gtk.IconSize.BUTTON)
+            searchbutton = Gtk.ToggleButton()
+            searchbutton.add(searchicon)
+            hboxbutton = Gtk.HBox()
+            hboxbutton.pack_start(searchbutton,True,False,0)
+            searchbutton.connect("toggled", self._on_transition2)
+            self.revealer2 = Gtk.Revealer()
+            hboxrevealer = Gtk.HBox()
+            hboxrevealer.pack_start(self.revealer2,True,False,0)
+            self.entry2 = Gtk.SearchEntry(placeholder_text="Search Service")
+            self.entry2.props.margin_left = 15
+            self.entry2.props.margin_right = 15
+            self.entry2.props.margin_top = 5
+            self.entry2.props.margin_bottom = 5
+            self.entry2.connect("search-changed", self._on_search2)
+            self.revealer2.add(self.entry2)
+            
             systemvseparator = Gtk.Separator()
             systemvseparator.set_margin_top(30)
             h = Gtk.HBox()
@@ -165,12 +206,16 @@ class Plugin(BasePlugin):
             h.pack_start(system_sthbox,True,False,0)
             vbox.pack_start(systemvseparator,False,False,0)
             vbox.pack_start(systemlabel,False,False,0)
+            vbox.pack_start(hboxbutton,False,False,0)
+            vbox.pack_start(hboxrevealer,False,False,0)
             vbox.pack_start(h,False,False,0)
-            listbox2 = Gtk.ListBox()
-            vbox.pack_start(listbox2,False,False,0)
+            self.listbox2 = Gtk.ListBox()
+            self.listbox2.props.margin_bottom=50
+            self.listbox2.set_filter_func(self._list_filter_func2, None)
+            vbox.pack_start(self.listbox2,False,False,0)
             for k,v in self.system_enabled_disabled_service.items():
                 row2 = Gtk.ListBoxRow(activatable=True)
-                listbox2.add(row2)
+                self.listbox2.add(row2)
                 h = Gtk.HBox()
                 row2.add(h)
                 h.set_homogeneous (True)
@@ -296,4 +341,45 @@ class Plugin(BasePlugin):
         return True
 
 
-
+    def _on_search1(self, entry):
+        self.listbox1.invalidate_filter()
+    
+    def _list_filter_func1(self, lista, user_data):
+        text = self.entry1.get_text()
+        if not text:
+            return lista
+        lbl = lista.get_child().get_children()[0].get_children()[0]
+        if text.lower() in lbl.get_text().lower():
+            return lista   
+        
+               
+    def _on_transition1(self, btn):
+        if self.revealer1.get_reveal_child():
+            self.revealer1.set_reveal_child(False) 
+            self.entry1.set_text("") 
+            btn.grab_focus()      
+        else:
+            self.revealer1.set_reveal_child(True)
+            self.entry1.grab_focus()
+    
+    def _on_search2(self, entry):
+        self.listbox2.invalidate_filter()
+    
+    def _list_filter_func2(self, lista, user_data):
+        text = self.entry2.get_text()
+        if not text:
+            return lista
+        lbl = lista.get_child().get_children()[0].get_children()[0]
+        if text.lower() in lbl.get_text().lower():
+            return lista   
+        
+               
+    def _on_transition2(self, btn):
+        if self.revealer2.get_reveal_child():
+            self.revealer2.set_reveal_child(False) 
+            self.entry2.set_text("") 
+            btn.grab_focus()      
+        else:
+            self.revealer2.set_reveal_child(True)
+            self.entry2.grab_focus()
+    

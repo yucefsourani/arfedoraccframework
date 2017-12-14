@@ -24,7 +24,7 @@ import dnf
 import os
 import gi
 gi.require_version("Gtk","3.0")
-from gi.repository import Gtk,GdkPixbuf, Pango
+from gi.repository import Gtk,GdkPixbuf, Pango, Gdk
 from arfedoraccframework.baseplugin import BasePlugin
 from arfedoraccframework.baseutils import get_icon_location
 from arfedoraccframework.runinroot import runinroot
@@ -53,6 +53,7 @@ class Plugin(BasePlugin):
         BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
         self._mainbox_.set_spacing(25)
         
+        
         self.base = dnf.Base()
         self.base.read_all_repos()
         self.repos=self.base.repos
@@ -74,6 +75,26 @@ class Plugin(BasePlugin):
         self._mainbox_.pack_start(headervseparator,False,False,0)
         
 
+        searchicon = Gtk.Image()
+        searchicon.set_from_icon_name("edit-find-symbolic", Gtk.IconSize.BUTTON)
+        self.searchbutton = Gtk.ToggleButton()
+        self.searchbutton.add(searchicon)
+        hboxbutton = Gtk.HBox()
+        hboxbutton.pack_start(self.searchbutton,True,False,0)
+        self.searchbutton.connect("toggled", self._on_transition)
+        self._mainbox_.pack_start(hboxbutton,False,False,0)
+        self.revealer = Gtk.Revealer()
+        hboxrevealer = Gtk.HBox()
+        hboxrevealer.pack_start(self.revealer,True,False,0)
+        self.entry = Gtk.SearchEntry(placeholder_text="Search Repo")
+        self.entry.props.margin_left = 15
+        self.entry.props.margin_right = 15
+        self.entry.props.margin_top = 5
+        self.entry.props.margin_bottom = 5
+        self.entry.connect("search-changed", self._on_search)
+        self.revealer.add(self.entry)
+        self._mainbox_.pack_start(hboxrevealer,False,False,0)
+        
         
         mainhbox = Gtk.HBox()
 
@@ -83,15 +104,13 @@ class Plugin(BasePlugin):
         self._mainbox_.pack_start(mainhbox,False,False,0)
 
         
+        self.listbox_dnf = Gtk.ListBox()
+        self.listbox_dnf.set_filter_func(self._list_filter_func, None)
         
-        
-
-        
-        listbox_dnf = Gtk.ListBox()
-        vbox.pack_start(listbox_dnf,False,False,0)
+        vbox.pack_start(self.listbox_dnf,False,False,0)
         for name,repo in self.repos.items():
             row_dnf = Gtk.ListBoxRow(activatable=True)
-            listbox_dnf.add(row_dnf)
+            self.listbox_dnf.add(row_dnf)
             h = Gtk.HBox(spacing=10)
             row_dnf.add(h)
             h.set_homogeneous (True)
@@ -117,7 +136,7 @@ class Plugin(BasePlugin):
             
 
 
-        
+        self._parent_.connect("key-press-event", self._on_key_press)
 
     def on_switch_changed(self,switch,state,reponame):
         if state:
@@ -138,7 +157,34 @@ class Plugin(BasePlugin):
  
      
         
+            
+    def _on_search(self, entry):
+        self.listbox_dnf.invalidate_filter()
+    
+    def _list_filter_func(self, lista, user_data):
+        text = self.entry.get_text()
+        if not text:
+            return lista
+        lbl = lista.get_child().get_children()[0].get_children()[0]
+        if text.lower() in lbl.get_text().lower():
+            return lista   
         
+               
+    def _on_transition(self, btn):
+        if self.revealer.get_reveal_child():
+            self.revealer.set_reveal_child(False) 
+            self.entry.set_text("") 
+            btn.grab_focus()      
+        else:
+            self.revealer.set_reveal_child(True)
+            self.entry.grab_focus()
+    
 
 
-
+    def _on_key_press(self, widget, event):
+        keyname = Gdk.keyval_name(event.keyval)
+        if keyname == 'Escape':
+            self.searchbutton.set_active(False)
+        if event.state and Gdk.ModifierType.CONTROL_MASK:
+            if keyname == 'f':
+                self.searchbutton.set_active(True)
