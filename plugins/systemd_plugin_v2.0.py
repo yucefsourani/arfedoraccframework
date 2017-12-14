@@ -210,7 +210,7 @@ class Plugin(BasePlugin):
             vbox.pack_start(hboxrevealer,False,False,0)
             vbox.pack_start(h,False,False,0)
             self.listbox2 = Gtk.ListBox()
-            self.listbox2.props.margin_bottom=50
+            self.listbox2.props.margin_bottom=150
             self.listbox2.set_filter_func(self._list_filter_func2, None)
             vbox.pack_start(self.listbox2,False,False,0)
             for k,v in self.system_enabled_disabled_service.items():
