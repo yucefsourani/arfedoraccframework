@@ -3,6 +3,17 @@ https://arfedora.blogspot.com
 
 Python+Gtk Framework to make control center from plugins (tested on fedora only)
 
+
+# Install On Fedora
+  
+sudo dnf copr enable youssefmsourani/arcontrolcenter -y
+  
+sudo dnf install arfedora-control-center -y
+
+
+
+# Install On Other Distro
+
 cd && git clone https://github.com/yucefsourani/arfedoraccframework
 
 cd ~/arfedoraccframework
@@ -14,12 +25,10 @@ chmod 755 install.py
 arfedoracontrolcenter
 
 
-# install On Fedora
-  
-sudo dnf copr enable youssefmsourani/arcontrolcenter -y
-  
-sudo dnf install arfedora-control-center -y
-  
+
+# Screenshot
+
+![Alt text](https://raw.githubusercontent.com/yucefsourani/arfedoraccframework/master/Screenshot%20from%202017-12-14%2003-38-16.jpg "Screenshot")
   
 # وثائق
 https://arfedora.blogspot.com/2017/11/arfedoracontrolcenter.html
@@ -72,7 +81,7 @@ https://arfedora.blogspot.com/2017/11/arfedoracontrolcenter.html
 
 
 
-* Optional Requires For Gnome Tweak Theme Plugin (Fedora See https://copr.fedorainfracloud.org/coprs/youssefmsourani/arcontrolcenter/packages/ )
+* Optional Requires For Gnome Tweak Themes Plugin (Fedora See https://copr.fedorainfracloud.org/coprs/youssefmsourani/arcontrolcenter/packages/ )
   * ``` breeze-cursor-theme ```
   
   * ``` anderson-wallpaper ```
