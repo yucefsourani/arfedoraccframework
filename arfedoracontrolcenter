@@ -172,7 +172,7 @@ class AppWindow(Gtk.ApplicationWindow):
                     button_image  =  [l for l in [os.path.join(homedata+"/icons",button_image),os.path.join("/usr/share/{}/icons".format(appname),plugin.button_image)] if os.path.isfile(l)][0]
                     pixbuf=GdkPixbuf.Pixbuf.new_from_file_at_size(button_image,mainbuttonsizewidth,mainbuttonsizeheight)
                 else:
-                    pixbuf = Gtk.IconTheme.get_default().load_icon(button_image[0], mainbuttonsizewidth, 0)
+                    pixbuf = Gtk.IconTheme.get_default().load_icon(button_image[0], mainbuttonsizewidth, Gtk.IconLookupFlags.FORCE_SIZE)
                 image          = Gtk.Image.new_from_pixbuf(pixbuf)
                 category             = plugin.category
                 category_icon_theme  =  plugin.category_icon_theme
