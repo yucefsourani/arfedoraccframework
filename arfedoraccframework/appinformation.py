@@ -38,7 +38,7 @@ mainbuttonsizeheight     = 50
 maxwidgetinrow           = 5
 mainbuttonbold           = True
 category_icon_theme_size = 32
-category_icon_theme_flag = 0
+category_icon_theme_flag = 16
 
 #dont change this
 homeconfig = GLib.get_user_config_dir()+"/"+appname
