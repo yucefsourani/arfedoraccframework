@@ -178,7 +178,7 @@ class AppWindow(Gtk.ApplicationWindow):
                 category_icon_theme  =  plugin.category_icon_theme
                 if category not in all_category.keys():
                     cb=Gtk.HBox(spacing=10)
-                    category_icon = Gtk.Image.new_from_pixbuf(get_icon_theme(category_icon_theme,category_icon_theme_size,category_icon_theme_flag))
+                    category_icon = Gtk.Image.new_from_pixbuf(get_icon_theme(category_icon_theme,category_icon_theme_size,Gtk.IconLookupFlags(category_icon_theme_flag)))
                     category_label = Gtk.Label("<b>"+category+"</b>",use_markup=True)
                     cb.pack_start(category_icon,False,False,0)
                     cb.pack_start(category_label,False,False,0)
