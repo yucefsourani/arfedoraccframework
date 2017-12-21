@@ -31,7 +31,7 @@ arfedoracontrolcenter
 ![Alt text](https://raw.githubusercontent.com/yucefsourani/arfedoraccframework/master/Screenshot%20from%202017-12-14%2003-38-16.jpg "Screenshot")
 https://www.youtube.com/watch?v=E0AD8TS0y1E&feature=youtu.be
 
-# الوثائق (بحاجة لتحديث سأقوم بالامر لاحقا إن شاء الله لاكن التغيرات طفيفة فقط إضافة سطر جديد على الإضافات)
+# الوثائق 
 https://arfedora.blogspot.com/2017/11/arfedoracontrolcenter.html
 
 
