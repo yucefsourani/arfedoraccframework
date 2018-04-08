@@ -29,7 +29,7 @@ from gi.repository import Gtk,Gio,GdkPixbuf, Pango, GLib
 from arfedoraccframework.baseplugin import BasePlugin
 from arfedoraccframework.baseutils import get_icon_location
 from arfedoraccframework.basegnome import gsetting_make_change
-from arfedoraccframework.widgetsutils import TooltipWindow
+
 
 desktop=os.getenv("XDG_CURRENT_DESKTOP")
 
@@ -68,9 +68,18 @@ mac_extensions_to_enable = ["user-theme@gnome-shell-extensions.gcampax.github.co
                             "background-logo@fedorahosted.org"]
                             
 
-mac_gsettings = [ ["org.gnome.desktop.background"          , "show-desktop-icons",GLib.Variant('b',False)] ,
-			    ["org.gnome.desktop.background"           , "picture-uri",GLib.Variant('s',"file:///usr/share/backgrounds/arfedora/Anderson_4K_Abstract_Wallpaper.jpg")] ,
-			    ["org.gnome.desktop.screensaver"          , "picture-uri",GLib.Variant('s',"file:///usr/share/backgrounds/arfedora/Anderson_4K_Abstract_Wallpaper.jpg")] ,
+mac_gsettings = [ ["org.gnome.desktop.background"                     , "picture-uri",GLib.Variant('s',"file:////usr/share/gnome-control-center/pixmaps/noise-texture-light.png")] ,
+			    ["org.gnome.desktop.screensaver"          , "picture-uri",GLib.Variant('s',"file:////usr/share/gnome-control-center/pixmaps/noise-texture-light.png")] ,
+			    ["org.gnome.desktop.background","primary-color",GLib.Variant('s',"#d272c4")] ,
+			    ["org.gnome.desktop.background","secondary-color",GLib.Variant('s',"#d272c4")] ,
+			    ["org.gnome.desktop.background","color-shading-type",GLib.Variant('s',"solid")] ,
+			    ["org.gnome.desktop.background","picture-options",GLib.Variant('s',"wallpaper")] ,
+			    ["org.gnome.desktop.background","picture-opacity",GLib.Variant('i',100)] ,
+			    ["org.gnome.desktop.screensaver","primary-color",GLib.Variant('s',"#d272c4")] ,
+			    ["org.gnome.desktop.screensaver","secondary-color",GLib.Variant('s',"#d272c4")] ,
+			    ["org.gnome.desktop.screensaver","color-shading-type",GLib.Variant('s',"solid")] ,
+			    ["org.gnome.desktop.screensaver","picture-options",GLib.Variant('s',"wallpaper")] ,
+			    ["org.gnome.desktop.screensaver","picture-opacity",GLib.Variant('i',100)] ,
 			    ["org.gnome.desktop.interface"            , "icon-theme",GLib.Variant('s',"macOS")] ,
 			    ["org.gnome.shell.extensions.user-theme"  , "name",GLib.Variant('s',"Ant")] ,
 			    ["org.gnome.desktop.interface"            , "gtk-theme",GLib.Variant('s',"Ant")] ,
@@ -83,13 +92,12 @@ mac_gsettings = [ ["org.gnome.desktop.background"          , "show-desktop-icons
 			
 mac_gnome_terminal = [[ "use-theme-colors" , GLib.Variant('b',False)] ,
                       [ "use-system-font" , GLib.Variant('b',False)] ,
-                      [ "background-color" , GLib.Variant('s',"#FFFFFF")] ,
+                      [ "background-color" , GLib.Variant('s',"#2E3436")] ,
                       [ "font" , GLib.Variant('s',"Monospace 15")] ,\
-                      [ "foreground-color" , GLib.Variant('s',"#5940BF")] ,
+                      [ "foreground-color" , GLib.Variant('s',"#FFFFFF")] ,
                       [ "cursor-background-color" , GLib.Variant('s',"#EF2929")] ,
                       [ "cursor-colors-set" ,GLib.Variant('b',True)] ,
-                      [ "background-transparency-percent" , GLib.Variant('i',5)] ,
-                      [ "use-transparent-background" , GLib.Variant('b',True)]
+                      [ "use-transparent-background" , GLib.Variant('b',False)]
                     ]
                     
 
@@ -97,7 +105,6 @@ mac_gnome_terminal = [[ "use-theme-colors" , GLib.Variant('b',False)] ,
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
         BasePlugin.__init__(self,parent=parent,boxparent=boxparent)
-        self.tooltipwindow=False
         self._mainbox_.set_border_width(5)
         self._mainbox_.set_spacing(20)
         headericon   = get_icon_location("GnomeLogoHorizontal.svg")
@@ -119,7 +126,7 @@ class Plugin(BasePlugin):
         machbox = Gtk.HBox(spacing=20)
         self._mainbox_.pack_start(machbox,False,False,0)
         button_mac_vbox = Gtk.VBox(spacing=1)
-        pixbufmac=GdkPixbuf.Pixbuf.new_from_file_at_size(get_icon_location("Screenshot from 2017-11-17 15-56-12.jpg"),500,400)
+        pixbufmac=GdkPixbuf.Pixbuf.new_from_file_at_size(get_icon_location("Screenshot from 2018-04-08 15-31-58.jpg"),500,400)
         imagemac = Gtk.Image.new_from_pixbuf(pixbufmac)
         label_mac = Gtk.Label("Ant")
         button_mac = Gtk.Button()
@@ -128,6 +135,9 @@ class Plugin(BasePlugin):
         button_mac_vbox.pack_start(label_mac,False,False,0)
         button_mac.add(button_mac_vbox)
         machbox.pack_start(button_mac,True,False,0)
+	
+        self.spiner = Gtk.Spinner()
+        self._mainbox_.pack_start(self.spiner,False,False,0)
         
 
 
@@ -138,7 +148,9 @@ class Plugin(BasePlugin):
         
     def make_change(self,extensions_to_enable,gsettings,gsettings_profile,default_terminal_profile,speed):
         GLib.idle_add(self._parent_.set_sensitive,False)
+        GLib.idle_add(self.spiner.start)
         gsetting_make_change(extensions_to_enable,gsettings,gsettings_profile,default_terminal_profile,speed)
+        GLib.idle_add(self.spiner.stop)
         GLib.idle_add(self._parent_.set_sensitive,True)
         
         
