@@ -88,7 +88,7 @@ def new_get_plugins(ignore=None):
         for plugin_folder in plugins_folders:
             for root, dirs, files in os.walk(plugin_folder):
                 for module_file in files:
-                    if module_file.endswith(".py")  and os.path.isfile(os.path.join(plugin_folder,module_file)):
+                    if module_file.endswith(".py")  :
                         if module_file not in depl:
                             if not root.split("/")[-1] in ignore:
                                 module_name, module_extension = os.path.splitext(module_file)

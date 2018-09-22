@@ -119,6 +119,7 @@ class AppWindow(Gtk.ApplicationWindow):
         except:
             gnome_version = None
         if  gnome_version:
+            print(gnome_version)
             if gnome_version<3.26:
                 to_ignore.append("gnome_control_center_3.26")
             elif gnome_version>=3.26:
@@ -186,7 +187,9 @@ class AppWindow(Gtk.ApplicationWindow):
                         category_icon = Gtk.Image.new_from_pixbuf(get_icon_theme(category_icon_theme,category_icon_theme_size,Gtk.IconLookupFlags(category_icon_theme_flag)))
                     except:
                         category_icon = Gtk.Image.new_from_pixbuf(get_icon_theme("applications-accessories",category_icon_theme_size,Gtk.IconLookupFlags(category_icon_theme_flag)))
-                    category_label = Gtk.Label("<b>"+category+"</b>",use_markup=True)
+                    category_label = Gtk.Label()
+                    category_label.props.use_markup=True
+                    category_label.set_markup("<b>"+category+"</b>")
                     cb.pack_start(category_icon,False,False,0)
                     cb.pack_start(category_label,False,False,0)
                     cb.set_margin_left(10)
@@ -233,7 +236,9 @@ class AppWindow(Gtk.ApplicationWindow):
             #eventbox.add(bvb)
             b = Gtk.Button(always_show_image=True,relief=Gtk.ReliefStyle.NONE)
             if mainbuttonbold:
-                bl = Gtk.Label("<b>"+button_label+"</b>",use_markup=True)
+                bl = Gtk.Label()
+                bl.props.use_markup=True
+                bl.set_markup("<b>"+button_label+"</b>")
             else:
                 bl = Gtk.Label(button_label)
             bl.set_line_wrap(True)
