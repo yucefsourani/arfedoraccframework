@@ -353,7 +353,10 @@ class AppWindow(Gtk.ApplicationWindow):
             self.header.set_show_close_button(False)
         backbutton = Gtk.Button()
         backbutton.connect("clicked",self.on_backbutton_clicked,plugin,blockclose,module)
-        backbutton.add(Gtk.Arrow(Gtk.ArrowType.LEFT, Gtk.ShadowType.NONE))
+        arrow = Gtk.Arrow()
+        arrow.props.arrow_type  = Gtk.ArrowType.LEFT
+        arrow.props.shadow_type = Gtk.ShadowType.NONE
+        backbutton.add(arrow)
         self.headerhbox.add(backbutton)
 
         plugin.run()
