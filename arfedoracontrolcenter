@@ -116,6 +116,7 @@ class AppWindow(Gtk.ApplicationWindow):
         try:
             gnome = basegnome.GnomeShell([])
             gnome_version = float(gnome.version()[0:4])
+            print(gnome.version())
         except:
             gnome_version = None
         if  gnome_version:
