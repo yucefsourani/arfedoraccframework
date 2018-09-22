@@ -115,8 +115,7 @@ class AppWindow(Gtk.ApplicationWindow):
             to_ignore.append("fedora")
         try:
             gnome = basegnome.GnomeShell([])
-            gnome_version = float(gnome.version()[0:4])
-            print(gnome.version())
+            gnome_version = eval(gnome.version()[0:4])
         except:
             gnome_version = None
         if  gnome_version:
