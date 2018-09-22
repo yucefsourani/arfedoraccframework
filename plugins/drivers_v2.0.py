@@ -114,6 +114,7 @@ class Plugin(BasePlugin):
         h.pack_start(v2,False,False,0)
         h.pack_start(v3,False,False,0)
         self.vb.pack_start(h,False,False,0)
+        self.nvidiacard.clear() # Froce Stop install nvidia driver right now
         for k,v in self.nvidiacard.items():
             nvidiaicon   = get_icon_location("NVLogo_2D.png")
             nvidiapixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(nvidiaicon,100,100)
@@ -183,6 +184,7 @@ class Plugin(BasePlugin):
         GLib.idle_add(self.spinner.stop)
         GLib.idle_add(self._parent_.set_sensitive,True)
         GLib.idle_add(self.gui)
+
        
     
     def run_refresh_drivers_files(self,button):

@@ -119,7 +119,6 @@ class AppWindow(Gtk.ApplicationWindow):
         except:
             gnome_version = None
         if  gnome_version:
-            print(gnome_version)
             if gnome_version<3.26:
                 to_ignore.append("gnome_control_center_3.26")
             elif gnome_version>=3.26:
