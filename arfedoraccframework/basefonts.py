@@ -51,8 +51,8 @@ class  CopyFonts(threading.Thread):
                         done = True
                     except Exception as e:
                         print(e)
-                        GLib.idle_add(self.parent.set_sensitive,True)
-                        return False
+                        #GLib.idle_add(self.parent.set_sensitive,True)
+                        #return False
         if done:
             subprocess.call("chmod 755 -R {}/*".format(fonts_folder),shell=True)
             subprocess.call("fc-cache -fv",shell=True)
