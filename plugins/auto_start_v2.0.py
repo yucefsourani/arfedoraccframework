@@ -30,7 +30,7 @@ from arfedoraccframework.baseplugin import BasePlugin
 from arfedoraccframework.baseutils import get_icon_location
     
 button_label         = _("AutoStart Manager")
-button_image         = "selinux-penguin-new_medium.png"
+button_image         = ["appointment-soon"]
 category             = _("System")
 title                = _("AutoStart Manager")
 arch                 = ["all"]
