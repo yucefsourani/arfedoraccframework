@@ -398,6 +398,9 @@ class Plugin(BasePlugin):
         
     def gui(self):
         self._mainbox_.set_border_width(5)
+        label  = Gtk.Label()
+        label.props.label = _("AutoStart Manager")
+        self._mainbox_.pack_start(label,True,True,0)
         autostart = AutoStart(self._parent_)
         self._mainbox_.pack_start(autostart,True,True,0)
         autostart.run()            
