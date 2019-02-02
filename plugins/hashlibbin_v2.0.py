@@ -161,20 +161,20 @@ class CustomButton(Gtk.Bin):
         self.xbutton.destroy()
     
 class ThreadCheck(threading.Thread):
-    def __init__(self,algorithms,file_location,hbox,result_label,button,algorithms_button):
+    def __init__(self,algorithms,file_location,hbox,result_label,button,start_button_handler,algorithms_button):
         threading.Thread.__init__(self)
-        self.algorithms         = algorithms
-        self.__file_location    = file_location
-        self.hbox               = hbox
-        self.result_label       = result_label
-        self.button             = button
-        self.algorithms_button  = algorithms_button
+        self.algorithms           = algorithms
+        self.__file_location      = file_location
+        self.hbox                 = hbox
+        self.result_label         = result_label
+        self.button               = button
+        self.start_button_handler = start_button_handler
+        self.algorithms_button    = algorithms_button
     
     def run(self):
         vbutton = self.button.get_child()
         bpbar   = Gtk.ProgressBar()
         GLib.idle_add(bpbar.set_show_text,True)
-        GLib.idle_add(self.button.set_sensitive,False)
         GLib.idle_add(self.algorithms_button.set_sensitive,False)
         GLib.idle_add(vbutton.pack_start,bpbar,True,True,0)
         GLib.idle_add(vbutton.show_all)
@@ -202,8 +202,8 @@ class ThreadCheck(threading.Thread):
             GLib.idle_add(vbutton.remove,bpbar)
             GLib.idle_add(vbutton.show_all)
             GLib.idle_add(bpbar.destroy)
-            GLib.idle_add(self.button.set_sensitive,True)
             GLib.idle_add(self.algorithms_button.set_sensitive,True)
+            GLib.idle_add(self.button.handler_unblock,self.start_button_handler)
             return
         if "shake_" in self.algorithms:
             try :
@@ -216,8 +216,8 @@ class ThreadCheck(threading.Thread):
                 GLib.idle_add(vbutton.remove,bpbar)
                 GLib.idle_add(vbutton.show_all)
                 GLib.idle_add(bpbar.destroy)
-                GLib.idle_add(self.button.set_sensitive,True)
                 GLib.idle_add(self.algorithms_button.set_sensitive,True)
+                GLib.idle_add(self.button.handler_unblock,self.start_button_handler)
                 return 
         else:
             GLib.idle_add(self.result_label.set_text,h.hexdigest())
@@ -225,9 +225,9 @@ class ThreadCheck(threading.Thread):
         GLib.idle_add(vbutton.remove,bpbar)
         GLib.idle_add(vbutton.show_all)
         GLib.idle_add(bpbar.destroy)
-        GLib.idle_add(self.button.set_sensitive,True)
         if not self.algorithms_button.button.props.label == "md5":
             GLib.idle_add(self.algorithms_button.set_sensitive,True)
+        GLib.idle_add(self.button.handler_unblock,self.start_button_handler)
         
 
 class ThreadCheckBox(Gtk.HBox):
@@ -259,7 +259,7 @@ class ThreadCheckBox(Gtk.HBox):
         blabel.props.label      = "Start"
         self.button.add(vbutton)
         vbutton.pack_start(blabel,True,True,0)
-        self.button.connect("clicked",self.__run)
+        self.start_button_handler = self.button.connect("clicked",self.__run)
         
         
         self.pack_start(self.vbox,True,True,0)
@@ -267,10 +267,12 @@ class ThreadCheckBox(Gtk.HBox):
         self.show_all()
     
     def __run(self,button):
+        self.button.handler_block(self.start_button_handler)
         self.result_label.set_text("")
         if not self.__file_location[0] or not os.path.isfile(self.__file_location[0]):
+            self.button.handler_unblock(self.start_button_handler)
             return
-        ThreadCheck(self.algorithms,self.__file_location[0],self,self.result_label,button,self.algorithms_button).start()
+        ThreadCheck(self.algorithms,self.__file_location[0],self,self.result_label,button,self.start_button_handler,self.algorithms_button).start()
 
         
         
