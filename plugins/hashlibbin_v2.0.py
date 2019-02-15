@@ -161,20 +161,20 @@ class CustomButton(Gtk.Bin):
         self.xbutton.destroy()
     
 class ThreadCheck(threading.Thread):
-    def __init__(self,algorithms,file_location,hbox,result_label,button,start_button_handler,algorithms_button):
+    def __init__(self,algorithms,file_location,hbox,result_label,button,algorithms_button):
         threading.Thread.__init__(self)
-        self.algorithms           = algorithms
-        self.__file_location      = file_location
-        self.hbox                 = hbox
-        self.result_label         = result_label
-        self.button               = button
-        self.start_button_handler = start_button_handler
-        self.algorithms_button    = algorithms_button
+        self.algorithms         = algorithms
+        self.__file_location    = file_location
+        self.hbox               = hbox
+        self.result_label       = result_label
+        self.button             = button
+        self.algorithms_button  = algorithms_button
     
     def run(self):
         vbutton = self.button.get_child()
         bpbar   = Gtk.ProgressBar()
         GLib.idle_add(bpbar.set_show_text,True)
+        GLib.idle_add(self.button.set_sensitive,False)
         GLib.idle_add(self.algorithms_button.set_sensitive,False)
         GLib.idle_add(vbutton.pack_start,bpbar,True,True,0)
         GLib.idle_add(vbutton.show_all)
@@ -202,8 +202,8 @@ class ThreadCheck(threading.Thread):
             GLib.idle_add(vbutton.remove,bpbar)
             GLib.idle_add(vbutton.show_all)
             GLib.idle_add(bpbar.destroy)
+            GLib.idle_add(self.button.set_sensitive,True)
             GLib.idle_add(self.algorithms_button.set_sensitive,True)
-            GLib.idle_add(self.button.handler_unblock,self.start_button_handler)
             return
         if "shake_" in self.algorithms:
             try :
@@ -216,8 +216,8 @@ class ThreadCheck(threading.Thread):
                 GLib.idle_add(vbutton.remove,bpbar)
                 GLib.idle_add(vbutton.show_all)
                 GLib.idle_add(bpbar.destroy)
+                GLib.idle_add(self.button.set_sensitive,True)
                 GLib.idle_add(self.algorithms_button.set_sensitive,True)
-                GLib.idle_add(self.button.handler_unblock,self.start_button_handler)
                 return 
         else:
             GLib.idle_add(self.result_label.set_text,h.hexdigest())
@@ -225,9 +225,9 @@ class ThreadCheck(threading.Thread):
         GLib.idle_add(vbutton.remove,bpbar)
         GLib.idle_add(vbutton.show_all)
         GLib.idle_add(bpbar.destroy)
+        GLib.idle_add(self.button.set_sensitive,True)
         if not self.algorithms_button.button.props.label == "md5":
             GLib.idle_add(self.algorithms_button.set_sensitive,True)
-        GLib.idle_add(self.button.handler_unblock,self.start_button_handler)
         
 
 class ThreadCheckBox(Gtk.HBox):
@@ -259,7 +259,7 @@ class ThreadCheckBox(Gtk.HBox):
         blabel.props.label      = "Start"
         self.button.add(vbutton)
         vbutton.pack_start(blabel,True,True,0)
-        self.start_button_handler = self.button.connect("clicked",self.__run)
+        self.button.connect("clicked",self.__run)
         
         
         self.pack_start(self.vbox,True,True,0)
@@ -267,12 +267,10 @@ class ThreadCheckBox(Gtk.HBox):
         self.show_all()
     
     def __run(self,button):
-        self.button.handler_block(self.start_button_handler)
         self.result_label.set_text("")
         if not self.__file_location[0] or not os.path.isfile(self.__file_location[0]):
-            self.button.handler_unblock(self.start_button_handler)
             return
-        ThreadCheck(self.algorithms,self.__file_location[0],self,self.result_label,button,self.start_button_handler,self.algorithms_button).start()
+        ThreadCheck(self.algorithms,self.__file_location[0],self,self.result_label,button,self.algorithms_button).start()
 
         
         
@@ -302,7 +300,23 @@ class HashLibBin(Gtk.Bin):
         self.add(self.main_vbox)
 
     def available_algorithms(self):
-        self.search_entry = Gtk.SearchEntry()
+        searchicon = Gtk.Image()
+        searchicon.set_from_icon_name("edit-find-symbolic", Gtk.IconSize.BUTTON)
+        self.searchbutton = Gtk.ToggleButton()
+        self.searchbutton.add(searchicon)
+        hboxbutton = Gtk.HBox()
+        hboxbutton.pack_start(self.searchbutton,True,False,0)
+        self.searchbutton.connect("toggled", self._on_transition1)
+        self.revealer1 = Gtk.Revealer()
+        hboxrevealer = Gtk.HBox()
+        hboxrevealer.pack_start(self.revealer1,True,False,0)
+        self.entry1 = Gtk.SearchEntry(placeholder_text="Search Algorithm")
+        self.entry1.props.margin_left = 15
+        self.entry1.props.margin_right = 15
+        self.entry1.props.margin_top = 5
+        self.entry1.props.margin_bottom = 5
+        self.entry1.connect("search-changed", self._on_search1)
+        self.revealer1.add(self.entry1)
         
         available_grid         = Gtk.Grid()
         self.available_flowbox = Gtk.FlowBox()
@@ -320,7 +334,25 @@ class HashLibBin(Gtk.Bin):
             button.connect("clicked",self.on_available_algorithms_button_clicked,algorithms,0)
             self.available_flowbox.add(button)
         
-        self.current_search_entry = Gtk.SearchEntry()
+
+        searchicon2 = Gtk.Image()
+        searchicon2.set_from_icon_name("edit-find-symbolic", Gtk.IconSize.BUTTON)
+        searchbutton2 = Gtk.ToggleButton()
+        searchbutton2.add(searchicon2)
+        hboxbutton2 = Gtk.HBox()
+        hboxbutton2.pack_start(searchbutton2,True,False,0)
+        searchbutton2.connect("toggled", self._on_transition2)
+        self.revealer2 = Gtk.Revealer()
+        hboxrevealer2 = Gtk.HBox()
+        hboxrevealer2.pack_start(self.revealer2,True,False,0)
+        self.entry2 = Gtk.SearchEntry(placeholder_text="Search Algorithm")
+        self.entry2.props.margin_left = 15
+        self.entry2.props.margin_right = 15
+        self.entry2.props.margin_top = 5
+        self.entry2.props.margin_bottom = 5
+        self.entry2.connect("search-changed", self._on_search2)
+        self.revealer2.add(self.entry2)
+
         current_grid              = Gtk.Grid()
         self.current_flowbox      = Gtk.FlowBox()
         self.current_flowbox.set_filter_func(self.__current_filter_func)
@@ -361,11 +393,13 @@ class HashLibBin(Gtk.Bin):
 
         
         self.main_vbox.pack_start(l1,False,False,0)
-        self.main_vbox.pack_start(self.search_entry,False,False,0)
+        self.main_vbox.pack_start(hboxbutton,False,False,0)
+        self.main_vbox.pack_start(hboxrevealer,False,False,0)
         self.main_vbox.pack_start(available_grid,False,False,0)
         self.main_vbox.pack_start(vseparator1,False,False,0)
         self.main_vbox.pack_start(l2,False,False,0)
-        self.main_vbox.pack_start(self.current_search_entry,False,False,0)
+        self.main_vbox.pack_start(hboxbutton2,False,False,0)
+        self.main_vbox.pack_start(hboxrevealer2,False,False,0)
         self.main_vbox.pack_start(current_grid,False,False,0)
         self.main_vbox.pack_start(vseparator2,False,False,0)
         self.main_vbox.pack_start(boxchoose_button,False,False,0)
@@ -376,8 +410,7 @@ class HashLibBin(Gtk.Bin):
         self.main_hbox.pack_start(self.process_vbox1,True,True,0)
         self.main_hbox.pack_start(self.process_vbox2,True,True,0)
         self.main_hbox.pack_start(self.process_vbox3,True,True,0)
-        self.search_entry.connect("notify::text",self.available_flowbox_filter)
-        self.current_search_entry.connect("notify::text",self.current_flowbox_filter)
+
 
 
         
@@ -401,7 +434,27 @@ class HashLibBin(Gtk.Bin):
         button.connect("xclosed",self.on_xclosed_clicked,algorithms,flowboxchild_index,b,l)
 
         self.show_all()
-            
+
+    def _on_transition1(self, btn):
+        
+        if self.revealer1.get_reveal_child():
+            self.revealer1.set_reveal_child(False) 
+            self.entry1.set_text("") 
+            btn.grab_focus()      
+        else:
+            self.revealer1.set_reveal_child(True)
+            self.entry1.grab_focus()
+        
+
+    def _on_transition2(self, btn):
+        if self.revealer2.get_reveal_child():
+            self.revealer2.set_reveal_child(False) 
+            self.entry2.set_text("") 
+            btn.grab_focus()      
+        else:
+            self.revealer2.set_reveal_child(True)
+            self.entry2.grab_focus()
+
     def on_xclosed_clicked(self,button,algorithms,pos,threadbox,label):
         flowboxchild_index = button.get_parent().get_index()
         button.get_parent().destroy()
@@ -433,10 +486,11 @@ class HashLibBin(Gtk.Bin):
         print(button.button.props.label)
         
     def on_choose_button_clicked(self,button):
-        dialog = Gtk.FileChooserDialog("Please choose a file", self.parent,
-            Gtk.FileChooserAction.OPEN)
+        dialog = Gtk.FileChooserDialog()
         
-
+        dialog.props.title  =  "Please choose a file"
+        #dialog.props.parent =  self.parent
+        dialog.props.action =  Gtk.FileChooserAction.OPEN
         dialog.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
         
         filter_any = Gtk.FileFilter()
@@ -455,7 +509,7 @@ class HashLibBin(Gtk.Bin):
         self.__file_name[0] = entry.props.text
 
     def __filter_func(self,child, *user_data):
-        text = self.search_entry.get_text()        
+        text = self.entry1.get_text()        
         if not text:
             return True
         else:
@@ -465,7 +519,7 @@ class HashLibBin(Gtk.Bin):
                 return False
                 
     def __current_filter_func(self,child, *user_data):
-        text = self.current_search_entry.get_text()        
+        text = self.entry2.get_text()        
         if not text:
             return True
         else:
@@ -474,13 +528,11 @@ class HashLibBin(Gtk.Bin):
             else:
                 return False
                 
-    def available_flowbox_filter(self,searchentry,text):
+    def _on_search1(self, entry):
         self.available_flowbox.invalidate_filter()
         
-    def current_flowbox_filter(self,searchentry,text):
+    def _on_search2(self, entry):
         self.current_flowbox.invalidate_filter()
-        
-        
 
 class Plugin(BasePlugin):
     def __init__(self,parent,boxparent):
