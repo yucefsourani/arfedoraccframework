@@ -7,4 +7,4 @@ Icon=org.github.yucefsourani.ArControlCenter
 Terminal=false
 Type=Application
 StartupNotify=true
-Categories=GTK;
+Categories=GTK;System;Settings;
