@@ -256,7 +256,7 @@ class AutoStart(Gtk.Bin):
         content   = appc.get_content_area ()
         content.get_children()[1].get_children()[-1].destroy()
         content.get_children()[1].get_children()[-1].destroy()
-        appc.get_header_bar().set_subtitle("Select Application")
+        #appc.get_header_bar().set_subtitle("Select Application")
         
         run = appc.run()
         if run==Gtk.ResponseType.OK:
