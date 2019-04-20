@@ -119,6 +119,7 @@ class Plugin(BasePlugin):
 
         cellrenderertext = Gtk.CellRendererText(placeholder_text="Add Config Key...")
         cellrenderertext.set_property("editable", True)
+        cellrenderertext.set_property("ellipsize", Pango.EllipsizeMode.START)
         cellrenderertext.connect("edited", self.on_cell_edited,0)
         treeviewcolumn = Gtk.TreeViewColumn(_("Keys"))
         treeviewcolumn.set_resizable(True)
@@ -131,6 +132,7 @@ class Plugin(BasePlugin):
 
         cellrenderertext = Gtk.CellRendererText(placeholder_text="Add Config Value...")
         cellrenderertext.set_property("editable", True)
+        cellrenderertext.set_property("ellipsize", Pango.EllipsizeMode.START)
         cellrenderertext.connect("edited", self.on_cell_edited,1)
 
         treeviewcolumn = Gtk.TreeViewColumn(_("Values"))
