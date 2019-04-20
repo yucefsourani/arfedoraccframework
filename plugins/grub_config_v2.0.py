@@ -24,7 +24,7 @@ import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,GdkPixbuf, Pango, GLib
 from arfedoraccframework.baseplugin import BasePlugin
-from arfedoraccframework.baseutils import get_icon_location, fedora_get_grub_menufile, get_file_to_run
+from arfedoraccframework.baseutils import get_icon_location, fedora_get_grub_menufile, get_file_to_run,get_distro_name,get_distro_version
 from collections import OrderedDict
 from arfedoraccframework.runinroot import runinroot
 from arfedoraccframework.widgetsutils import Yes_Or_No
@@ -47,6 +47,16 @@ if_all_true_skip     = [True,False]
 priority             = 0
 category_icon_theme  = "applications-utilities" 
 
+
+def fedora_30():
+    if get_distro_name()=="fedora":
+        if get_distro_version()=="30":
+            return True
+        else:
+            return False
+    else:
+        return False
+    
 class copy_config_and_apply(threading.Thread):
     def __init__(self,file_,parent,spinner,refresh_func):
         threading.Thread.__init__(self)
@@ -75,7 +85,10 @@ class Plugin(BasePlugin):
         headerbox    = Gtk.VBox(spacing=6)
         headerpixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(headericon,100,100)
         headerimage  = Gtk.Image.new_from_pixbuf(headerpixbuf)
-        headerlabel  = Gtk.Label(_("<b>Config Boot Loader\n<span  foreground=\"red\">Be Careful</span></b>"),use_markup=True)
+        if fedora_30():
+            headerlabel  = Gtk.Label(_("<b>Config Boot Loader\n(Fedora 30 detected  some options maybe not working like GRUB_CMDLINE_LINUX )\n<span  foreground=\"red\">Be Careful</span></b>"),use_markup=True)
+        else:
+            headerlabel  = Gtk.Label(_("<b>Config Boot Loader\n<span  foreground=\"red\">Be Careful</span></b>"),use_markup=True)
         headerlabel.set_line_wrap(True)
         headerlabel.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR )
         headerlabel.set_max_width_chars(13)
