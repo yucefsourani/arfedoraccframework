@@ -71,32 +71,36 @@ def write_file_to_run(commands,add=""):
         return False
     return filetorun
     
-def get_distro_name():
+def get_distro_name_like(location="/etc/os-release"):
     result=""
-    if not os.path.isfile("/etc/os-release"):
+    if not os.path.isfile(location):
         return None
-    with open("/etc/os-release","r") as myfile:
-        for l in myfile.readlines():
-            if l.startswith("ID"):
-                result=l.split("=")[1].strip()
-    if result.startswith("\"") and result.endswith("\""):
-        return result[1:-1]
-    elif result.startswith("\'") and result.endswith("\'"):
-        return result[1:-1]
-    return result
+    with open(location) as myfile:
+        for l in myfile:
+            if l.startswith("ID_LIKE") and not l.startswith("ID_"):
+                result=l.split("=",1)[1].strip()
+    return result.replace("\"","").replace("'","")
 
-def get_distro_version():
+def get_distro_name(location="/etc/os-release"):
     result=""
-    if not os.path.isfile("/etc/os-release"):
+    if not os.path.isfile(location):
         return None
-    with open("/etc/os-release","r") as myfile:
-        for l in myfile.readlines():
+    with open(location) as myfile:
+        for l in myfile:
+            if l.startswith("ID") :
+                result=l.split("=",1)[1].strip()
+    if not result:
+        result = get_distro_name_like(location)
+    return result.replace("\"","").replace("'","")
+    
+def get_distro_version(location="/etc/os-release"):
+    result=""
+    if not os.path.isfile(location):
+        return None
+    with open(location) as myfile:
+        for l in myfile:
             if l.startswith("VERSION_ID"):
-                result=l.split("=")[1].strip()
-    if result.startswith("\"") and result.endswith("\""):
-        return result[1:-1]
-    elif result.startswith("\'") and result.endswith("\'"):
-        return result[1:-1]
-    return result
+                result=l.split("=",1)[1].strip()
+    return result.replace("\"","").replace("'","")
 
 
