@@ -71,13 +71,13 @@ def write_file_to_run(commands,add=""):
         return False
     return filetorun
     
-def get_distro_name_like(location="/etc/os-release"):
+def get_distro_name_id(location="/etc/os-release"):
     result=""
     if not os.path.isfile(location):
         return None
     with open(location) as myfile:
         for l in myfile:
-            if l.startswith("ID_LIKE") and not l.startswith("ID_"):
+            if l.startswith("ID") and not l.startswith("ID_"):
                 result=l.split("=",1)[1].strip()
     return result.replace("\"","").replace("'","")
 
@@ -87,10 +87,10 @@ def get_distro_name(location="/etc/os-release"):
         return None
     with open(location) as myfile:
         for l in myfile:
-            if l.startswith("ID") :
+            if l.startswith("ID_LIKE") :
                 result=l.split("=",1)[1].strip()
     if not result:
-        result = get_distro_name_like(location)
+        result = get_distro_name_id(location)
     return result.replace("\"","").replace("'","")
     
 def get_distro_version(location="/etc/os-release"):
