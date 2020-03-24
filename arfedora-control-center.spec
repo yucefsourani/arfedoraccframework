@@ -1,7 +1,7 @@
 %global appname arfedoracontrolcenter
 Name:           arfedora-control-center
 Version:        3.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        ArFedora control Center
 Group:		Applications/System
 BuildArch:	noarch
@@ -87,6 +87,9 @@ cp pk/org.github.yucefsourani.ArfedoraControlCenter.service %{buildroot}%{_datad
 
 
 %changelog
+* Thu Mar 24 2020 yucuf sourani <youssef.m.sourani@gmail.com> 3.3-7
+- Release 7
+
 * Thu Mar 24 2020 yucuf sourani <youssef.m.sourani@gmail.com> 3.3-6
 - Release 6 
 
