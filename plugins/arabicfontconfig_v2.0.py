@@ -94,9 +94,14 @@ class Plugin(BasePlugin):
         self.label = Gtk.Label("بسم الله الرحمن الرحيم")
         fn = font.get_config()
         if fn:
-            self.combo.set_active(font_dict[fn]+1)
-            pangofont = Pango.font_description_from_string(fn)
-            self.label.modify_font(pangofont)
+            try:
+                self.combo.set_active(font_dict[fn]+1)
+                pangofont = Pango.font_description_from_string(fn)
+                self.label.override_font(pangofont)
+            except Exception as e:
+                print(e)
+                remove_config()
+                self.combo.set_active(0)
         else:
             self.combo.set_active(0)
         self.combo.connect("changed",self.on_combo_changed)
